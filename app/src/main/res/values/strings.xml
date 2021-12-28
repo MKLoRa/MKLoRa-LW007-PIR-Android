@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">LW007-PIR</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="ensure">OK</string>
+    <string name="confirm">Confirm</string>
+
+
+    <string name="please_enter_password">Please enter password</string>
+    <string name="password_null">Password cannot be empty!</string>
+    <string name="main_password_length">The password should be 8 characters</string>
+    <string name="change_password_length">The password should be 8 characters.Please try again</string>
+    <string name="change_password_match">Password do not match!Please try again.</string>
+    <string name="main_exit_tips">Are you sure you want to quit?</string>
+    <string name="setting_syncing">syncing</string>
+
+    <string name="company_name">MOKO TECHNOLOGY LTD.</string>
+    <string name="about_title">ABOUT</string>
+    <string name="company_website">www.mokosmart.com</string>
+
+    <string name="permission_storage_close_title">Storage permission is not available</string>
+    <string name="permission_storage_close_content">Please find it in cellphone setting- permission, and allow LW007 use the Storage permission</string>
+    <string name="permission_open">OK</string>
+    <string name="permission_storage_need_title">Please turn on Storage permissions</string>
+    <string name="permission_storage_need_content">LW007 requires access to Location and Storage permission. If the permissions are not on, LW007 cannot be used normally.</string>
+    <string name="location_need_title">Turn on Location permission</string>
+    <string name="location_need_content">After that, LW007 could search and connect with the device</string>
+    <string name="permission_location_close_title">Location permission is not available</string>
+    <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow LW007 use the Location and Storage permission</string>
+    <string name="permission_location_need_title">Turn on Location permission</string>
+    <string name="permission_location_need_content">After that, LW007 could search and connect with the device</string>
+    <string name="title_lora">LoRa</string>
+    <string name="title_general">GENERAL</string>
+    <string name="title_ble">BLUETOOTH</string>
+    <string name="title_device">DEVICE</string>
+    <string name="connection_setting">Connection Settings</string>
+    <string name="application_setting">Application Settings</string>
+    <string name="general_switch_control">Switch Control</string>
+    <string name="general_electricity_settings">Electricity Settings</string>
+    <string name="general_energy_settings">Energy Settings</string>
+    <string name="general_protection_settings">Protection Settings</string>
+    <string name="general_load_status_notification">Load Status Notification</string>
+    <string name="general_countdown_settings">Countdown Settings</string>
+    <string name="general_led_settings">LED Settings</string>
+    <string name="protection_over_load">Over-Load Protection</string>
+    <string name="protection_over_voltage">Over-Voltage Protection</string>
+    <string name="protection_sag_voltage">Sag-Voltage Protection</string>
+    <string name="protection_over_current">Over-Current Protection</string>
+    <string name="led_power_indicator_color">Power Indicator Color</string>
+    <string name="device_information">Device Information</string>
+
+</resources>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lw007_grey_f2f2f2"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_switch_control"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_switch_control"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onSwitchControl"
+                android:text="@string/general_switch_control"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_electricity_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_switch_control">
+
+            <TextView
+                android:id="@+id/tv_electricity_settings"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onElectricitySettings"
+                android:text="@string/general_electricity_settings"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_energy_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_electricity_settings">
+
+            <TextView
+                android:id="@+id/tv_energy_settings"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onEnergySettings"
+                android:text="@string/general_energy_settings"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_protection_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_energy_settings">
+
+            <TextView
+                android:id="@+id/tv_protection_settings"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onProtectionSettings"
+                android:text="@string/general_protection_settings"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_load_status_notification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_protection_settings">
+
+            <TextView
+                android:id="@+id/tv_load_status_notification"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onLoadStatusNotification"
+                android:text="@string/general_load_status_notification"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_countdown_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_load_status_notification">
+
+            <TextView
+                android:id="@+id/tv_countdown_settings"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onCountdownSetting"
+                android:text="@string/general_countdown_settings"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_led_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/lw007_white_ffffff"
+            android:padding="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_countdown_settings">
+
+            <TextView
+                android:id="@+id/tv_led_settings"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/lw007_ic_arrow_right"
+                android:gravity="center_vertical"
+                android:onClick="onLEDSetting"
+                android:text="@string/general_led_settings"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
