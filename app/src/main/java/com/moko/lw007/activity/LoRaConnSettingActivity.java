@@ -93,8 +93,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     TextView tvDr2;
     @BindView(R2.id.ll_adr_options)
     LinearLayout llAdrOptions;
-    @BindView(R2.id.tv_device_type)
-    TextView tvDeviceType;
     @BindView(R2.id.tv_max_retransmission_times)
     TextView tvMaxRetransmissionTimes;
     @BindView(R2.id.rl_max_retransmission_times)
@@ -103,12 +101,10 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     private boolean mReceiverTag = false;
     private ArrayList<String> mModeList;
     private ArrayList<String> mRegionsList;
-    private ArrayList<String> mClassList;
     private ArrayList<String> mMessageTypeList;
     private ArrayList<String> mMaxRetransmissionTimesList;
     private int mSelectedMode;
     private int mSelectedRegion;
-    private int mSelectedClass;
     private int mSelectedMessageType;
     private int mSelectedCh1;
     private int mSelectedCh2;
@@ -139,9 +135,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         mRegionsList.add("IN865");
         mRegionsList.add("US915");
         mRegionsList.add("RU864");
-        mClassList = new ArrayList<>();
-        mClassList.add("Class A");
-        mClassList.add("Class C");
         mMessageTypeList = new ArrayList<>();
         mMessageTypeList.add("Unconfirmed");
         mMessageTypeList.add("Confirmed");
@@ -170,7 +163,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             orderTasks.add(OrderTaskAssembler.getLoraAppSKey());
             orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
             orderTasks.add(OrderTaskAssembler.getLoraRegion());
-            orderTasks.add(OrderTaskAssembler.getLoraClass());
             orderTasks.add(OrderTaskAssembler.getLoraMessageType());
             orderTasks.add(OrderTaskAssembler.getLoraCH());
             orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
@@ -350,13 +342,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                             mSelectedMessageType = messageType;
                                             tvMessageType.setText(mMessageTypeList.get(messageType));
                                             rlMaxRetransmissionTimes.setVisibility(mSelectedMessageType == 0 ? View.GONE : View.VISIBLE);
-                                        }
-                                        break;
-                                    case KEY_LORA_CLASS:
-                                        if (length > 0) {
-                                            final int loraClass = value[4] & 0xFF;
-                                            mSelectedClass = loraClass == 2 ? 1 : 0;
-                                            tvDeviceType.setText(mClassList.get(mSelectedClass));
                                         }
                                         break;
                                     case KEY_LORA_CH:
@@ -732,19 +717,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         bottomDialog.show(getSupportFragmentManager());
     }
 
-
-    public void selectClass(View view) {
-        if (isWindowLocked())
-            return;
-        BottomDialog bottomDialog = new BottomDialog();
-        bottomDialog.setDatas(mClassList, mSelectedClass);
-        bottomDialog.setListener(value -> {
-            mSelectedClass = value;
-            tvDeviceType.setText(mClassList.get(value));
-        });
-        bottomDialog.show(getSupportFragmentManager());
-    }
-
     public void selectMaxRetransmissionTimes(View view) {
         if (isWindowLocked())
             return;
@@ -813,7 +785,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             orderTasks.add(OrderTaskAssembler.setLoraAppKey(appKey));
         }
         orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
-        orderTasks.add(OrderTaskAssembler.setLoraClass(mSelectedClass == 1 ? 2 : 0));
         orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
         if (mSelectedMessageType == 1) {
             orderTasks.add(OrderTaskAssembler.setMaxRetransmissionTimes(mSelectedMaxRetransmissionTimes + 1));

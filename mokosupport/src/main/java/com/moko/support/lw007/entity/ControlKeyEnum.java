@@ -6,14 +6,16 @@ import java.io.Serializable;
 public enum ControlKeyEnum implements Serializable {
 
 
-    KEY_SWITCH_STATUS(0x61),
-    KEY_NETWORK_STATUS(0x62),
-    KEY_LOAD_STATUS(0x63),
-    KEY_TOTAL_ENERGY(0x65),
-    KEY_RESTART(0x66),
-    KEY_MAC(0x68),
-    KEY_TIME(0x69),
-    KEY_RESTORE(0x6A),
+    KEY_RESTART(0x50),
+    KEY_RESTORE(0x51),
+    KEY_POWER_OFF(0x52),
+    KEY_TIME(0x53),
+    KEY_NETWORK_STATUS(0x54),
+    KEY_BATTERY(0x56),
+    KEY_MAC(0x57),
+    KEY_PIR(0x58),
+    KEY_HALL_STATUS_SUM(0x59),
+    KEY_TH_DATA(0x5A),
     ;
 
     private int paramsKey;

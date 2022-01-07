@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lw007_grey_f2f2f2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/lw007_blue_2f84d0">
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:drawableLeft="@drawable/lw007_ic_back"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:onClick="onBack"
+            android:paddingLeft="16dp"
+            android:text=""
+            android:textColor="@color/lw007_white_ffffff"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/general_hall_settings"
+            android:textColor="@color/lw007_white_ffffff"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:onClick="onSave"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/lw007_ic_save" />
+
+    </RelativeLayout>
+
+    <CheckBox
+        android:id="@+id/cb_hall_enable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/lw007_white_ffffff"
+        android:button="@null"
+        android:drawableRight="@drawable/lw007_selector_cb_btn"
+        android:padding="12dp"
+        android:text="Function Switch"
+        android:textColor="@color/lw007_black_333333"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/lw007_white_ffffff"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/hall_status_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/lw007_door_status"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="Door Status"
+            android:textColor="@color/lw007_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_hall_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/hall_status_title"
+            android:layout_alignTop="@id/hall_status_title"
+            android:layout_alignParentRight="true"
+            android:text="Closed"
+            android:textColor="@color/lw007_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <View
+            style="@style/lw007_divider_line"
+            android:layout_below="@id/tv_hall_status"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:id="@+id/total_trigger_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hall_status_title"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Total Trigger Times"
+            android:textColor="@color/lw007_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_total_trigger_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/total_trigger_times"
+            android:layout_alignTop="@id/total_trigger_times"
+            android:layout_alignParentRight="true"
+            android:text="0"
+            android:textColor="@color/lw007_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</LinearLayout>

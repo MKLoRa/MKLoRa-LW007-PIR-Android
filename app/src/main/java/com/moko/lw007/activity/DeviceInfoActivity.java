@@ -23,6 +23,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw007.AppConstants;
 import com.moko.lw007.R;
 import com.moko.lw007.R2;
@@ -79,7 +80,6 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private DeviceFragment deviceFragment;
     private ArrayList<String> mUploadMode;
     private ArrayList<String> mRegions;
-    private ArrayList<String> mClass;
     private int mSelectedRegion;
     private int mSelectUploadMode;
     private boolean mReceiverTag = false;
@@ -113,9 +113,6 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         mRegions.add("IN865");
         mRegions.add("US915");
         mRegions.add("RU864");
-        mClass = new ArrayList<>();
-        mClass.add("ClassA");
-        mClass.add("ClassC");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -129,9 +126,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             // sync time after connect success;
             orderTasks.add(OrderTaskAssembler.setTime());
             // get lora params
-            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
             orderTasks.add(OrderTaskAssembler.getLoraRegion());
-            orderTasks.add(OrderTaskAssembler.getLoraClass());
+            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
             orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
             LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
@@ -268,6 +264,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                 // write
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
+                                    case KEY_BLE_ENABLE:
+                                    case KEY_BLE_TIMEOUT_DURATION:
                                     case KEY_BLE_ADV_NAME:
                                     case KEY_BLE_ADV_INTERVAL:
                                     case KEY_BLE_TX_POWER:
@@ -277,6 +275,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         }
                                         break;
                                     case KEY_BLE_LOGIN_MODE:
+                                    case KEY_HEARTBEAT:
+                                    case KEY_TIME_ZONE:
+                                    case KEY_LOW_POWER_PROMPT:
+                                    case KEY_LOW_POWER_PAYLOAD:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -305,16 +307,28 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         if (length > 0) {
                                             final int mode = value[4];
                                             mSelectUploadMode = mode;
+                                            String loraInfo = String.format("%s/%s/ClassA",
+                                                    mUploadMode.get(mSelectUploadMode - 1),
+                                                    mRegions.get(mSelectedRegion));
+                                            loraFragment.setLoRaInfo(loraInfo);
                                         }
                                         break;
-                                    case KEY_LORA_CLASS:
+                                    case KEY_HEARTBEAT:
                                         if (length > 0) {
-                                            final int loraClass = value[4] & 0xff;
-                                            String loraInfo = String.format("%s/%s/%s",
-                                                    mUploadMode.get(mSelectUploadMode - 1),
-                                                    mRegions.get(mSelectedRegion),
-                                                    loraClass == 0 ? mClass.get(loraClass) : mClass.get(loraClass - 1));
-                                            loraFragment.setLoRaInfo(loraInfo);
+                                            final int heartbeat = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 4 + length));
+                                            generalFragment.setHeartbeat(heartbeat);
+                                        }
+                                        break;
+                                    case KEY_BLE_ENABLE:
+                                        if (length > 0) {
+                                            final int enable = value[4] & 0xFF;
+                                            bleFragment.setBleEnable(enable);
+                                        }
+                                        break;
+                                    case KEY_BLE_TIMEOUT_DURATION:
+                                        if (length > 0) {
+                                            int timeout = value[4] & 0xFF;
+                                            bleFragment.setBleTimeoutDuration(timeout);
                                         }
                                         break;
                                     case KEY_BLE_ADV_NAME:
@@ -352,6 +366,18 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         if (length > 0) {
                                             int timeZone = value[4];
                                             deviceFragment.setTimeZone(timeZone);
+                                        }
+                                        break;
+                                    case KEY_LOW_POWER_PROMPT:
+                                        if (length > 0) {
+                                            int prompt = value[4] & 0xFF;
+                                            deviceFragment.setLowPowerPrompt(prompt);
+                                        }
+                                        break;
+                                    case KEY_LOW_POWER_PAYLOAD:
+                                        if (length > 0) {
+                                            int payload = value[4] & 0xFF;
+                                            deviceFragment.setLowPowerPayload(payload);
                                         }
                                         break;
                                 }
@@ -522,6 +548,14 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onSave(View view) {
         if (isWindowLocked())
             return;
+        if (radioBtnGeneral.isChecked()) {
+            if (generalFragment.isValid()) {
+                showSyncingProgressDialog();
+                generalFragment.saveParams();
+            } else {
+                ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
+            }
+        }
         if (radioBtnBle.isChecked()) {
             if (bleFragment.isValid()) {
                 showSyncingProgressDialog();
@@ -572,18 +606,25 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         List<OrderTask> orderTasks = new ArrayList<>();
         // device
         orderTasks.add(OrderTaskAssembler.getTimeZone());
+        orderTasks.add(OrderTaskAssembler.getLowPowerPrompt());
+        orderTasks.add(OrderTaskAssembler.getLowPowerPayload());
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
     private void showGeneralAndGetData() {
         tvTitle.setText("General Settings");
-        ivSave.setVisibility(View.GONE);
+        ivSave.setVisibility(View.VISIBLE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)
                 .show(generalFragment)
                 .hide(bleFragment)
                 .hide(deviceFragment)
                 .commit();
+        showSyncingProgressDialog();
+        List<OrderTask> orderTasks = new ArrayList<>();
+        // get general params
+        orderTasks.add(OrderTaskAssembler.getHeartbeat());
+        LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
     private void showBleAndGetData() {
@@ -600,7 +641,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         // get ble params
         orderTasks.add(OrderTaskAssembler.getBleAdvName());
         orderTasks.add(OrderTaskAssembler.getBleAdvInterval());
+        orderTasks.add(OrderTaskAssembler.getBleEnable());
         orderTasks.add(OrderTaskAssembler.getBleConnectable());
+        orderTasks.add(OrderTaskAssembler.getBleTimeoutDuration());
         orderTasks.add(OrderTaskAssembler.getBleLoginMode());
         orderTasks.add(OrderTaskAssembler.getBleTxPower());
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -661,52 +704,24 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     // general
-    public void onSwitchControl(View view) {
+    public void onPIRSettings(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, SwitchControlActivity.class);
+        Intent intent = new Intent(this, PIRSettingsActivity.class);
         startActivity(intent);
     }
 
-    public void onElectricitySettings(View view) {
+    public void onHallSettings(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, ElectricitySettingsActivity.class);
+        Intent intent = new Intent(this, HallSettingsActivity.class);
         startActivity(intent);
     }
 
-    public void onEnergySettings(View view) {
+    public void onTHSettings(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, EnergySettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void onProtectionSettings(View view) {
-        if (isWindowLocked())
-            return;
-        Intent intent = new Intent(this, ProtectionSettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void onLoadStatusNotification(View view) {
-        if (isWindowLocked())
-            return;
-        Intent intent = new Intent(this, LoadStatusNotificationActivity.class);
-        startActivity(intent);
-    }
-
-    public void onCountdownSetting(View view) {
-        if (isWindowLocked())
-            return;
-        Intent intent = new Intent(this, CountdownSettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void onLEDSetting(View view) {
-        if (isWindowLocked())
-            return;
-        Intent intent = new Intent(this, LEDSettingsActivity.class);
+        Intent intent = new Intent(this, THSettingsActivity.class);
         startActivity(intent);
     }
 
@@ -721,6 +736,22 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         if (isWindowLocked())
             return;
         bleFragment.changeLoginMode();
+    }
+
+    // device
+    public void selectLowPowerPrompt(View view) {
+        if (isWindowLocked())
+            return;
+        deviceFragment.showLowPowerDialog();
+    }
+
+    public void onLowPowerPayload(View view) {
+        if (isWindowLocked())
+            return;
+        deviceFragment.changeLowPowerPayload();
+    }
+
+    public void onPowerOff(View view) {
     }
 
     public void selectTimeZone(View view) {

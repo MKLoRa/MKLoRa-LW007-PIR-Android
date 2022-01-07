@@ -35,18 +35,14 @@
     <string name="title_device">DEVICE</string>
     <string name="connection_setting">Connection Settings</string>
     <string name="application_setting">Application Settings</string>
-    <string name="general_switch_control">Switch Control</string>
-    <string name="general_electricity_settings">Electricity Settings</string>
-    <string name="general_energy_settings">Energy Settings</string>
-    <string name="general_protection_settings">Protection Settings</string>
-    <string name="general_load_status_notification">Load Status Notification</string>
-    <string name="general_countdown_settings">Countdown Settings</string>
-    <string name="general_led_settings">LED Settings</string>
-    <string name="protection_over_load">Over-Load Protection</string>
-    <string name="protection_over_voltage">Over-Voltage Protection</string>
-    <string name="protection_sag_voltage">Sag-Voltage Protection</string>
-    <string name="protection_over_current">Over-Current Protection</string>
-    <string name="led_power_indicator_color">Power Indicator Color</string>
+    <string name="general_pir_settings">PIR Settings</string>
+    <string name="general_hall_settings">Hall Settings</string>
+    <string name="general_th_settings"><![CDATA[T&H Settings]]></string>
     <string name="device_information">Device Information</string>
-
+    <string name="low_power_prompt_tips">*When the battery is less than or equal to %s, the green LED will flash once every 10 seconds.</string>
+    <string-array name="lw007_pir_params">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
 </resources>

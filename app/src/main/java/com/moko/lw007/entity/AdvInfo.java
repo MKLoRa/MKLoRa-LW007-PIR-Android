@@ -11,10 +11,8 @@ public class AdvInfo {
     public int txPower;
     public boolean connectable;
     public boolean needPassword;
-    public int voltage;
-    public int current;
-    public int power;
-    public int powerFactor;
-    public int currentRate;
-    public int loadState;
+    public int battery;
+    public float temp;
+    public float humidity;
+    public float voltage;
 }

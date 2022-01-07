@@ -61,6 +61,18 @@ public class MokoCharacteristicHandler {
                 final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_DISCONNECTED_NOTIFY.getUuid());
                 mCharacteristicMap.put(OrderCHAR.CHAR_DISCONNECTED_NOTIFY, characteristic);
             }
+            if (service.getCharacteristic(OrderCHAR.CHAR_PIR.getUuid()) != null) {
+                final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_PIR.getUuid());
+                mCharacteristicMap.put(OrderCHAR.CHAR_PIR, characteristic);
+            }
+            if (service.getCharacteristic(OrderCHAR.CHAR_HALL_STATUS.getUuid()) != null) {
+                final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_HALL_STATUS.getUuid());
+                mCharacteristicMap.put(OrderCHAR.CHAR_HALL_STATUS, characteristic);
+            }
+            if (service.getCharacteristic(OrderCHAR.CHAR_TH.getUuid()) != null) {
+                final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_TH.getUuid());
+                mCharacteristicMap.put(OrderCHAR.CHAR_TH, characteristic);
+            }
             if (service.getCharacteristic(OrderCHAR.CHAR_PARAMS.getUuid()) != null) {
                 final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_PARAMS.getUuid());
                 mCharacteristicMap.put(OrderCHAR.CHAR_PARAMS, characteristic);
@@ -68,6 +80,10 @@ public class MokoCharacteristicHandler {
             if (service.getCharacteristic(OrderCHAR.CHAR_CONTROL.getUuid()) != null) {
                 final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_CONTROL.getUuid());
                 mCharacteristicMap.put(OrderCHAR.CHAR_CONTROL, characteristic);
+            }
+            if (service.getCharacteristic(OrderCHAR.CHAR_LOG.getUuid()) != null) {
+                final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_LOG.getUuid());
+                mCharacteristicMap.put(OrderCHAR.CHAR_LOG, characteristic);
             }
         }
         return mCharacteristicMap;

@@ -52,12 +52,6 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getLoraClass() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LORA_CLASS);
-        return task;
-    }
-
     public static OrderTask getLoraUploadMode() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_LORA_MODE);
@@ -155,111 +149,9 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getSwitchStatus() {
-        ControlReadTask task = new ControlReadTask();
-        task.setData(ControlKeyEnum.KEY_SWITCH_STATUS);
-        return task;
-    }
-
-    public static OrderTask getPowerOnDefaultMode() {
+    public static OrderTask getBleEnable() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_POWER_ON_DEFAULT_MODE);
-        return task;
-    }
-
-    public static OrderTask getSwitchPayloadsReportInterval() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_SWITCH_PAYLOADS_REPORT_INTERVAL);
-        return task;
-    }
-
-    public static OrderTask getElectricityPayloadsReportInterval() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_ELECTRICITY_PAYLOADS_REPORT_INTERVAL);
-        return task;
-    }
-
-    public static OrderTask getEnergyConfigInterval() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_ENERGY_CONFIG_INTERVAL);
-        return task;
-    }
-
-    public static OrderTask getPowerChangeValue() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_POWER_CHANGE_VALUE);
-        return task;
-    }
-
-    public static OrderTask getTotalEnergy() {
-        ControlReadTask task = new ControlReadTask();
-        task.setData(ControlKeyEnum.KEY_TOTAL_ENERGY);
-        return task;
-    }
-
-    public static OrderTask getDeviceSpecification() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_DEVICE_SPECIFICATION);
-        return task;
-    }
-
-    public static OrderTask getOverVoltageProtection() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_OVER_VOLTAGE_PROTECTION);
-        return task;
-    }
-
-    public static OrderTask getSagVoltageProtection() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_SAG_VOLTAGE_PROTECTION);
-        return task;
-    }
-
-    public static OrderTask getOverCurrentProtection() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_OVER_CURRENT_PROTECTION);
-        return task;
-    }
-
-    public static OrderTask getOverLoadProtection() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_OVER_LOAD_PROTECTION);
-        return task;
-    }
-
-    public static OrderTask getLoadStatus() {
-        ControlReadTask task = new ControlReadTask();
-        task.setData(ControlKeyEnum.KEY_LOAD_STATUS);
-        return task;
-    }
-
-    public static OrderTask getLoadNotification() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LOAD_NOTIFICATION);
-        return task;
-    }
-
-    public static OrderTask getLoadStatusThreshold() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LOAD_STATUS_THRESHOLD);
-        return task;
-    }
-
-    public static OrderTask getCountdownPayloadsReportInterval() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_COUNTDOWN_PAYLOADS_REPORT_INTERVAL);
-        return task;
-    }
-
-    public static OrderTask getLEDIndicatorStatus() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LED_INDICATOR_STATUS);
-        return task;
-    }
-
-    public static OrderTask getPowerIndicatorColor() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_POWER_INDICATOR_COLOR);
+        task.setData(ParamsKeyEnum.KEY_BLE_ENABLE);
         return task;
     }
 
@@ -275,6 +167,18 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getBleTimeoutDuration() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_BLE_TIMEOUT_DURATION);
+        return task;
+    }
+
+    public static OrderTask getBleLoginMode() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_BLE_LOGIN_MODE);
+        return task;
+    }
+
     public static OrderTask getBleTxPower() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_BLE_TX_POWER);
@@ -287,12 +191,131 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getBleLoginMode() {
+    public static OrderTask getPIREnable() {
         ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_BLE_LOGIN_MODE);
+        task.setData(ParamsKeyEnum.KEY_PIR_ENABLE);
         return task;
     }
 
+    public static OrderTask getPIRReportInterval() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_PIR_REPORT_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask getPIRSensitivity() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_PIR_SENSITIVITY);
+        return task;
+    }
+
+    public static OrderTask getPIRDelayTime() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_PIR_DELAY_TIME);
+        return task;
+    }
+
+    public static OrderTask getHallStatusEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HALL_STATUS_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getTHEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TH_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getTHSampleRate() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TH_SAMPLE_RATE);
+        return task;
+    }
+
+    public static OrderTask getTempThresholdAlarmEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TEMP_THRESHOLD_ALARM_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getTempThresholdAlarm() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TEMP_THRESHOLD_ALARM);
+        return task;
+    }
+
+    public static OrderTask getTempChangeAlarmEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TEMP_CHANGE_ALARM_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getTempChangeAlarmDuration() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TEMP_CHANGE_ALARM_DURATION);
+        return task;
+    }
+
+    public static OrderTask getTempChangeAlarmValue() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TEMP_CHANGE_ALARM_VALUE);
+        return task;
+    }
+
+    public static OrderTask getHumidityThresholdAlarmEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HUMIDITY_THRESHOLD_ALARM_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getHumidityThresholdAlarm() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HUMIDITY_THRESHOLD_ALARM);
+        return task;
+    }
+
+    public static OrderTask getHumidityChangeAlarmEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HUMIDITY_CHANGE_ALARM_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getHumidityChangeAlarmDuration() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HUMIDITY_CHANGE_ALARM_DURATION);
+        return task;
+    }
+
+    public static OrderTask getHumidityChangeAlarmValue() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HUMIDITY_CHANGE_ALARM_VALUE);
+        return task;
+    }
+
+    public static OrderTask getLEDIndicatorStatus() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LED_INDICATOR_STATUS);
+        return task;
+    }
+
+    public static OrderTask getHeartbeat() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_HEARTBEAT);
+        return task;
+    }
+
+    public static OrderTask getLowPowerPrompt() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PROMPT);
+        return task;
+    }
+
+    public static OrderTask getLowPowerPayload() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD);
+        return task;
+    }
 
     public static OrderTask getTimeZone() {
         ParamsReadTask task = new ParamsReadTask();
@@ -300,9 +323,39 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getNetworkStatus() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_NETWORK_STATUS);
+        return task;
+    }
+
+    public static OrderTask getBattery() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_BATTERY);
+        return task;
+    }
+
     public static OrderTask getMacAddress() {
         ControlReadTask task = new ControlReadTask();
         task.setData(ControlKeyEnum.KEY_MAC);
+        return task;
+    }
+
+    public static OrderTask getPIR() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_PIR);
+        return task;
+    }
+
+    public static OrderTask getHallStatusSum() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_HALL_STATUS_SUM);
+        return task;
+    }
+
+    public static OrderTask getTHData() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_TH_DATA);
         return task;
     }
 
@@ -343,12 +396,6 @@ public class OrderTaskAssembler {
     public static OrderTask setLoraUploadMode(@IntRange(from = 1, to = 2) int mode) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setLoraUploadMode(mode);
-        return task;
-    }
-
-    public static OrderTask setLoraClass(@IntRange(from = 0, to = 2) int loraClass) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setLoraClass(loraClass);
         return task;
     }
 
@@ -437,94 +484,15 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setSwitchStatus(int status) {
-        ControlWriteTask task = new ControlWriteTask();
-        task.setSwitchStatus(status);
+    public static OrderTask setBleLoginMode(int loginMode) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setBleLoginMode(loginMode);
         return task;
     }
 
-    public static OrderTask setPowerOnDefaultMode(int mode) {
+    public static OrderTask setBleEnable(int enable) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setPowerOnDefaultMode(mode);
-        return task;
-    }
-
-    public static OrderTask setSwitchPayloadsReportInterval(int interval) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setSwitchPayloadsReportInterval(interval);
-        return task;
-    }
-
-    public static OrderTask setElectricityPayloadsReportInterval(int interval) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setElectricityPayloadsReportInterval(interval);
-        return task;
-    }
-
-
-    public static OrderTask setEnergyConfigInterval(int reportInterval, int saveInterval) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setEnergyConfigInterval(reportInterval, saveInterval);
-        return task;
-    }
-
-    public static OrderTask setPowerChangeValue(int value) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setPowerChangeValue(value);
-        return task;
-    }
-
-    public static OrderTask setOverVoltageProtection(int onOff, int value, int time) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setOverVoltageProtection(onOff, value, time);
-        return task;
-    }
-
-    public static OrderTask setSagVoltageProtection(int onOff, int value, int time) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setSagVoltageProtection(onOff, value, time);
-        return task;
-    }
-
-    public static OrderTask setOverCurrentProtection(int onOff, int value, int time) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setOverCurrentProtection(onOff, value, time);
-        return task;
-    }
-
-    public static OrderTask setOverLoadProtection(int onOff, int value, int time) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setOverLoadProtection(onOff, value, time);
-        return task;
-    }
-
-    public static OrderTask setLoadNotification(int start, int stop) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setLoadNotification(start, stop);
-        return task;
-    }
-
-    public static OrderTask setLoadStatusThreshold(int threshold) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setLoadStatusThreshold(threshold);
-        return task;
-    }
-
-    public static OrderTask setCountdownPayloadsReportInterval(int interval) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setCountdownPayloadsReportInterval(interval);
-        return task;
-    }
-
-    public static OrderTask setLEDIndicatorStatus(int networkIndicator, int powerIndicator) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setLEDIndicatorStatus(networkIndicator, powerIndicator);
-        return task;
-    }
-
-    public static OrderTask setPowerIndicatorColor(int option, int blue, int green, int yellow, int orange, int red, int purple) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setPowerIndicatorColor(option, blue, green, yellow, orange, red, purple);
+        task.setBleEnable(enable);
         return task;
     }
 
@@ -552,9 +520,135 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setBleLoginMode(int loginMode) {
+    public static OrderTask setBleTimeoutDuration(int duration) {
         ParamsWriteTask task = new ParamsWriteTask();
-        task.setBleLoginMode(loginMode);
+        task.setBleTimeoutDuration(duration);
+        return task;
+    }
+
+    public static OrderTask setPIREnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setPIREnable(enable);
+        return task;
+    }
+
+    public static OrderTask setPIRReportInterval(int interval) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setPIRReportInterval(interval);
+        return task;
+    }
+
+    public static OrderTask setPIRSensitivity(int sensitivity) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setPIRSensitivity(sensitivity);
+        return task;
+    }
+
+    public static OrderTask setPIRDelayTime(int delayTime) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setPIRDelayTime(delayTime);
+        return task;
+    }
+
+    public static OrderTask setHallStatusEnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHallStatusEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setTHEnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTHEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setTHSampleRate(int rate) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTHSampleRate(rate);
+        return task;
+    }
+
+    public static OrderTask setTempThresholdAlarmEnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTempThresholdAlarmEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setTempThresholdAlarm(int min, int max) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTempThresholdAlarm(min, max);
+        return task;
+    }
+
+    public static OrderTask setTempChangeAlarmEnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTempChangeAlarmEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setTempChangeAlarmDuration(int duration) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTempChangeAlarmDuration(duration);
+        return task;
+    }
+
+    public static OrderTask setTempChangeAlarmValue(int value) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTempChangeAlarmValue(value);
+        return task;
+    }
+
+    public static OrderTask setHumidityThresholdAlarmEnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHumidityThresholdAlarmEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setHumidityThresholdAlarm(int min, int max) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHumidityThresholdAlarm(min, max);
+        return task;
+    }
+
+    public static OrderTask setHumidityChangeAlarmEnable(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHumidityChangeAlarmEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setHumidityChangeAlarmDuration(int duration) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHumidityChangeAlarmDuration(duration);
+        return task;
+    }
+
+    public static OrderTask setHumidityChangeAlarmValue(int value) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHumidityChangeAlarmValue(value);
+        return task;
+    }
+
+    public static OrderTask setHeartbeat(int heartbeat) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setHeartbeat(heartbeat);
+        return task;
+    }
+
+    public static OrderTask setLowPowerPrompt(int lowPowerPrompt) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLowPowerPrompt(lowPowerPrompt);
+        return task;
+    }
+
+    public static OrderTask setLowPowerPayload(int payload) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLowPowerPayload(payload);
+        return task;
+    }
+
+    public static OrderTask setLEDIndicatorStatus(int networkIndicator, int powerIndicator) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLEDIndicatorStatus(networkIndicator, powerIndicator);
         return task;
     }
 

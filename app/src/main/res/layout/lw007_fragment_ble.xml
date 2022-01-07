@@ -118,24 +118,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Connectable"
+                android:text="Beacon Mode"
                 android:textColor="@color/lw007_black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/iv_connectable"
+                app:layout_constraintBottom_toBottomOf="@id/cb_beacon_mode"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_connectable" />
+                app:layout_constraintTop_toTopOf="@id/cb_beacon_mode" />
 
-            <ImageView
-                android:id="@+id/iv_connectable"
-                android:layout_width="wrap_content"
+            <CheckBox
+                android:id="@+id/cb_beacon_mode"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:onClick="onConnectable"
-                android:paddingLeft="6dp"
+                android:button="@null"
+                android:drawableRight="@drawable/lw007_selector_cb_btn"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:src="@drawable/lw007_ic_unchecked"
+                android:text="Beacon Mode"
+                android:textColor="@color/lw007_black_333333"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -145,7 +147,114 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_connectable" />
+                app:layout_constraintTop_toBottomOf="@id/cb_beacon_mode" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_beacon_mode_open"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cb_beacon_mode">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="Connectable"
+                    android:textColor="@color/lw007_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_connectable"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_connectable" />
+
+                <ImageView
+                    android:id="@+id/iv_connectable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="onConnectable"
+                    android:paddingLeft="6dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:src="@drawable/lw007_ic_unchecked"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    style="@style/lw007_divider_line"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_connectable" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_beacon_mode_close"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cb_beacon_mode">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Broadcast Timeout"
+                    android:textColor="@color/lw007_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/et_adv_timeout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/et_adv_timeout" />
+
+                <EditText
+                    android:id="@+id/et_adv_timeout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="1~60"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text=""
+                    android:textColor="@color/lw007_black_333333"
+                    android:textColorHint="@color/lw007_grey_ebebeb"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mins"
+                    android:textColor="@color/lw007_black_333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/et_adv_timeout"
+                    app:layout_constraintLeft_toRightOf="@id/et_adv_timeout"
+                    app:layout_constraintTop_toTopOf="@id/et_adv_timeout" />
+
+                <View
+                    style="@style/lw007_divider_line"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_adv_timeout" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:layout_width="0dp"
@@ -163,7 +272,7 @@
                 android:id="@+id/iv_login_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="80dp"
                 android:clickable="true"
                 android:onClick="onChangeLoginMode"
                 android:paddingLeft="6dp"
@@ -171,7 +280,7 @@
                 android:paddingBottom="6dp"
                 android:src="@drawable/lw007_ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_connectable" />
+                app:layout_constraintTop_toBottomOf="@id/cb_beacon_mode" />
 
             <View
                 style="@style/lw007_divider_line"

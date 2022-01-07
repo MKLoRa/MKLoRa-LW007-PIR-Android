@@ -23,6 +23,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lw007.AppConstants;
 import com.moko.lw007.R;
 import com.moko.lw007.R2;
 import com.moko.lw007.dialog.AlertMessageDialog;
@@ -68,6 +69,8 @@ public class SystemInfoActivity extends BaseActivity {
     TextView tvProductModel;
     @BindView(R2.id.tv_manufacture)
     TextView tvManufacture;
+    @BindView(R2.id.tv_battery)
+    TextView tvBattery;
     private boolean mReceiverTag = false;
     private String mDeviceMac;
 
@@ -86,6 +89,7 @@ public class SystemInfoActivity extends BaseActivity {
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.getMacAddress());
         orderTasks.add(OrderTaskAssembler.getDeviceModel());
+        orderTasks.add(OrderTaskAssembler.getBattery());
         orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
         orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
         orderTasks.add(OrderTaskAssembler.getHardwareVersion());
@@ -173,6 +177,12 @@ public class SystemInfoActivity extends BaseActivity {
                                             tvMacAddress.setText(mDeviceMac);
                                         }
                                         break;
+                                    case KEY_BATTERY:
+                                        if (length > 0) {
+                                            int battery = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 4 + length));
+                                            tvBattery.setText(String.format("%sV", MokoUtils.getDecimalFormat("0.###").format(battery * 0.001f)));
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -228,6 +238,14 @@ public class SystemInfoActivity extends BaseActivity {
             mLoadingMessageDialog.dismissAllowingStateLoss();
     }
 
+
+    public void onDebuggerMode(View view) {
+        if (isWindowLocked())
+            return;
+        Intent intent = new Intent(this, ExportDataActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+        startActivity(intent);
+    }
 
     public void onBack(View view) {
         backHome();

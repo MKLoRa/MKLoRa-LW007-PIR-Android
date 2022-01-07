@@ -18,11 +18,12 @@ public class ControlReadTask extends OrderTask {
 
     public void setData(ControlKeyEnum key) {
         switch (key) {
-            case KEY_SWITCH_STATUS:
             case KEY_NETWORK_STATUS:
-            case KEY_TOTAL_ENERGY:
-            case KEY_LOAD_STATUS:
+            case KEY_BATTERY:
             case KEY_MAC:
+            case KEY_PIR:
+            case KEY_HALL_STATUS_SUM:
+            case KEY_TH_DATA:
                 createGetConfigData(key.getParamsKey());
                 break;
         }

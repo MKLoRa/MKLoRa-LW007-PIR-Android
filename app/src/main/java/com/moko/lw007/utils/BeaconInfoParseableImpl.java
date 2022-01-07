@@ -35,20 +35,19 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
         if (manufacturer == null || manufacturer.size() == 0)
             return null;
         byte[] manufacturerSpecificDataByte = record.getManufacturerSpecificData(manufacturer.keyAt(0));
-        if (manufacturerSpecificDataByte.length != 23)
+        if (manufacturerSpecificDataByte.length != 14)
             return null;
         int deviceType = -1;
-        int voltage = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 6, 8));
-        int current = MokoUtils.toIntSigned(Arrays.copyOfRange(manufacturerSpecificDataByte, 8, 10));
-        int power = MokoUtils.toIntSigned(Arrays.copyOfRange(manufacturerSpecificDataByte, 10, 14));
-        int powerFactor = manufacturerSpecificDataByte[14] & 0xFF;
-        int currentRate = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 15, 17));
-        int loadState = manufacturerSpecificDataByte[21] & 0xFF;
-        int txPower = manufacturerSpecificDataByte[22];
+        int battery = ((manufacturerSpecificDataByte[0] & 0x40) == 0x40) ? 1 : 0;
+        float temp = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 1, 3)) * 0.1f - 30;
+        float humidity = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 3, 5)) * 0.1f;
+        float voltage = 2.2f + (manufacturerSpecificDataByte[5] & 0xFF) * 0.1f;
+        int txPower = manufacturerSpecificDataByte[6];
+        int needPassword = manufacturerSpecificDataByte[13];
         Iterator iterator = map.keySet().iterator();
         while (iterator.hasNext()) {
             ParcelUuid parcelUuid = (ParcelUuid) iterator.next();
-            if (parcelUuid.toString().startsWith("0000aa04")) {
+            if (parcelUuid.toString().startsWith("0000aa05")) {
                 byte[] bytes = map.get(parcelUuid);
                 if (bytes != null) {
                     deviceType = bytes[0] & 0xFF;
@@ -67,15 +66,13 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             long intervalTime = currentTime - advInfo.scanTime;
             advInfo.intervalTime = intervalTime;
             advInfo.scanTime = currentTime;
+            advInfo.battery = battery;
             advInfo.txPower = txPower;
             advInfo.connectable = result.isConnectable();
+            advInfo.temp = temp;
+            advInfo.humidity = humidity;
             advInfo.voltage = voltage;
-            advInfo.current = current;
-            advInfo.power = power;
-            advInfo.powerFactor = powerFactor;
-            advInfo.currentRate = currentRate;
-            advInfo.needPassword = (loadState & 0x02) == 2;
-            advInfo.loadState = loadState;
+            advInfo.needPassword = needPassword == 1;
         } else {
             advInfo = new AdvInfo();
             advInfo.name = deviceInfo.name;
@@ -83,15 +80,13 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.rssi = deviceInfo.rssi;
             advInfo.deviceType = deviceType;
             advInfo.scanTime = SystemClock.elapsedRealtime();
+            advInfo.battery = battery;
             advInfo.txPower = txPower;
             advInfo.connectable = result.isConnectable();
+            advInfo.temp = temp;
+            advInfo.humidity = humidity;
             advInfo.voltage = voltage;
-            advInfo.current = current;
-            advInfo.power = power;
-            advInfo.powerFactor = powerFactor;
-            advInfo.currentRate = currentRate;
-            advInfo.needPassword = (loadState & 0x02) == 2;
-            advInfo.loadState = loadState;
+            advInfo.needPassword = needPassword == 1;
             advInfoHashMap.put(deviceInfo.mac, advInfo);
         }
 

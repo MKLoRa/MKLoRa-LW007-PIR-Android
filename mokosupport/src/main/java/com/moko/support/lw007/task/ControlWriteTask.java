@@ -6,8 +6,6 @@ import com.moko.support.lw007.entity.OrderCHAR;
 
 import java.util.Calendar;
 
-import androidx.annotation.IntRange;
-
 public class ControlWriteTask extends OrderTask {
     public byte[] data;
 
@@ -30,21 +28,20 @@ public class ControlWriteTask extends OrderTask {
         };
     }
 
-    public void setSwitchStatus(@IntRange(from = 0, to = 1) int status) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ControlKeyEnum.KEY_SWITCH_STATUS.getParamsKey(),
-                (byte) 0x01,
-                (byte) status
-        };
-    }
-
     public void restore() {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ControlKeyEnum.KEY_RESTORE.getParamsKey(),
+                (byte) 0x00
+        };
+    }
+
+    public void setPowerOff() {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ControlKeyEnum.KEY_POWER_OFF.getParamsKey(),
                 (byte) 0x00
         };
     }

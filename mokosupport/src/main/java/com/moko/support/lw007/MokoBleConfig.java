@@ -22,8 +22,12 @@ final class MokoBleConfig extends MokoBleManager {
     private MokoResponseCallback mMokoResponseCallback;
     private BluetoothGattCharacteristic passwordCharacteristic;
     private BluetoothGattCharacteristic disconnectedCharacteristic;
+    private BluetoothGattCharacteristic pirCharacteristic;
+    private BluetoothGattCharacteristic hallStatusCharacteristic;
+    private BluetoothGattCharacteristic thCharacteristic;
     private BluetoothGattCharacteristic paramsCharacteristic;
     private BluetoothGattCharacteristic controlDataCharacteristic;
+    private BluetoothGattCharacteristic logCharacteristic;
 
     public MokoBleConfig(@NonNull Context context, MokoResponseCallback callback) {
         super(context);
@@ -36,6 +40,10 @@ final class MokoBleConfig extends MokoBleManager {
         if (service != null) {
             passwordCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_PASSWORD.getUuid());
             disconnectedCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_DISCONNECTED_NOTIFY.getUuid());
+            pirCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_PIR.getUuid());
+            hallStatusCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_HALL_STATUS.getUuid());
+            thCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_TH.getUuid());
+            logCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_LOG.getUuid());
             controlDataCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_CONTROL.getUuid());
             paramsCharacteristic = service.getCharacteristic(OrderCHAR.CHAR_PARAMS.getUuid());
             enablePasswordNotify();
@@ -120,6 +128,62 @@ final class MokoBleConfig extends MokoBleManager {
 
     public void disableDisconnectedNotify() {
         disableNotifications(controlDataCharacteristic).enqueue();
+    }
+
+    public void enablePIRNotify() {
+        setIndicationCallback(pirCharacteristic).with((device, data) -> {
+            final byte[] value = data.getValue();
+            XLog.e("onDataReceived");
+            XLog.e("device to app : " + MokoUtils.bytesToHexString(value));
+            mMokoResponseCallback.onCharacteristicChanged(pirCharacteristic, value);
+        });
+        enableNotifications(pirCharacteristic).enqueue();
+    }
+
+    public void disablePIRNotify() {
+        disableNotifications(pirCharacteristic).enqueue();
+    }
+
+    public void enableHallStatusNotify() {
+        setIndicationCallback(hallStatusCharacteristic).with((device, data) -> {
+            final byte[] value = data.getValue();
+            XLog.e("onDataReceived");
+            XLog.e("device to app : " + MokoUtils.bytesToHexString(value));
+            mMokoResponseCallback.onCharacteristicChanged(hallStatusCharacteristic, value);
+        });
+        enableNotifications(hallStatusCharacteristic).enqueue();
+    }
+
+    public void disableHallStatusNotify() {
+        disableNotifications(hallStatusCharacteristic).enqueue();
+    }
+
+    public void enableTHNotify() {
+        setIndicationCallback(thCharacteristic).with((device, data) -> {
+            final byte[] value = data.getValue();
+            XLog.e("onDataReceived");
+            XLog.e("device to app : " + MokoUtils.bytesToHexString(value));
+            mMokoResponseCallback.onCharacteristicChanged(thCharacteristic, value);
+        });
+        enableNotifications(thCharacteristic).enqueue();
+    }
+
+    public void disableTHNotify() {
+        disableNotifications(thCharacteristic).enqueue();
+    }
+
+    public void enableLogNotify() {
+        setIndicationCallback(logCharacteristic).with((device, data) -> {
+            final byte[] value = data.getValue();
+            XLog.e("onDataReceived");
+            XLog.e("device to app : " + MokoUtils.bytesToHexString(value));
+            mMokoResponseCallback.onCharacteristicChanged(logCharacteristic, value);
+        });
+        enableNotifications(logCharacteristic).enqueue();
+    }
+
+    public void disableLogNotify() {
+        disableNotifications(logCharacteristic).enqueue();
     }
 
     public void enableControlDataNotify() {

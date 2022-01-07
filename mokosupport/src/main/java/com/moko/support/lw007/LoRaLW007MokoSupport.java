@@ -28,6 +28,8 @@ public class LoRaLW007MokoSupport extends MokoBleLib {
 
     private Context mContext;
 
+    private MokoBleConfig mBleConfig;
+
     private LoRaLW007MokoSupport() {
         //no instance
     }
@@ -50,8 +52,8 @@ public class LoRaLW007MokoSupport extends MokoBleLib {
 
     @Override
     public MokoBleManager getMokoBleManager() {
-        MokoBleConfig mokoSupportBleManager = new MokoBleConfig(mContext, this);
-        return mokoSupportBleManager;
+        mBleConfig = new MokoBleConfig(mContext, this);
+        return mBleConfig;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -125,8 +127,17 @@ public class LoRaLW007MokoSupport extends MokoBleLib {
     public boolean orderNotify(BluetoothGattCharacteristic characteristic, byte[] value) {
         final UUID responseUUID = characteristic.getUuid();
         OrderCHAR orderCHAR = null;
-        if (responseUUID.equals(OrderCHAR.CHAR_DISCONNECTED_NOTIFY.getUuid())) {
-            orderCHAR = OrderCHAR.CHAR_DISCONNECTED_NOTIFY;
+        if (responseUUID.equals(OrderCHAR.CHAR_PIR.getUuid())) {
+            orderCHAR = OrderCHAR.CHAR_PIR;
+        }
+        if (responseUUID.equals(OrderCHAR.CHAR_HALL_STATUS.getUuid())) {
+            orderCHAR = OrderCHAR.CHAR_HALL_STATUS;
+        }
+        if (responseUUID.equals(OrderCHAR.CHAR_LOG.getUuid())) {
+            orderCHAR = OrderCHAR.CHAR_LOG;
+        }
+        if (responseUUID.equals(OrderCHAR.CHAR_TH.getUuid())) {
+            orderCHAR = OrderCHAR.CHAR_TH;
         }
         if (orderCHAR == null)
             return false;
@@ -140,4 +151,45 @@ public class LoRaLW007MokoSupport extends MokoBleLib {
         EventBus.getDefault().post(event);
         return true;
     }
+
+    public void enablePIRNotify() {
+        if (mBleConfig != null)
+            mBleConfig.enablePIRNotify();
+    }
+
+    public void disablePIRNotify() {
+        if (mBleConfig != null)
+            mBleConfig.disablePIRNotify();
+    }
+
+    public void enableHallStatusNotify() {
+        if (mBleConfig != null)
+            mBleConfig.enableHallStatusNotify();
+    }
+
+    public void disableHallStatusNotify() {
+        if (mBleConfig != null)
+            mBleConfig.disableHallStatusNotify();
+    }
+
+    public void enableTHNotify() {
+        if (mBleConfig != null)
+            mBleConfig.enableTHNotify();
+    }
+
+    public void disableTHNotify() {
+        if (mBleConfig != null)
+            mBleConfig.disableTHNotify();
+    }
+
+    public void enableLogNotify() {
+        if (mBleConfig != null)
+            mBleConfig.enableLogNotify();
+    }
+
+    public void disableLogNotify() {
+        if (mBleConfig != null)
+            mBleConfig.disableLogNotify();
+    }
+
 }

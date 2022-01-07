@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -37,6 +38,7 @@ import com.moko.lw007.entity.AdvInfo;
 import com.moko.lw007.utils.BeaconInfoParseableImpl;
 import com.moko.lw007.utils.SPUtiles;
 import com.moko.lw007.utils.ToastUtils;
+import com.moko.lw007.utils.Utils;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.MokoBleScanner;
 import com.moko.support.lw007.OrderTaskAssembler;
@@ -107,6 +109,19 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
         rvDevices.setAdapter(adapter);
         mHandler = new Handler(Looper.getMainLooper());
         mokoBleScanner = new MokoBleScanner(this);
+        StringBuffer buffer = new StringBuffer();
+        // 记录机型
+        buffer.append("机型：");
+        buffer.append(android.os.Build.MODEL);
+        buffer.append("=====");
+        // 记录版本号
+        buffer.append("手机系统版本：");
+        buffer.append(android.os.Build.VERSION.RELEASE);
+        buffer.append("=====");
+        // 记录APP版本
+        buffer.append("APP版本：");
+        buffer.append(Utils.getVersionInfo(this));
+        XLog.d(buffer.toString());
         EventBus.getDefault().register(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -538,5 +553,20 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
             unregisterReceiver(mReceiver);
         }
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        XLog.i("onNewIntent...");
+        setIntent(intent);
+        if (getIntent().getExtras() != null) {
+            String from = getIntent().getStringExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY);
+            if (ExportDataActivity.TAG.equals(from)) {
+                if (animation == null) {
+                    startScan();
+                }
+            }
+        }
     }
 }
