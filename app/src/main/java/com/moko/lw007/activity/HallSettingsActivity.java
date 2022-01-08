@@ -94,9 +94,15 @@ public class HallSettingsActivity extends BaseActivity {
                         if (header == 0xED && flag == 0x02 && cmd == 0x01 && len == 0x03) {
                             int hallStatus = value[4] & 0xFF;
                             int triggerTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
-                            tvHallStatus.setVisibility(hallStatus == 0xFF ? View.GONE : View.VISIBLE);
-                            tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
-                            tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
+                            if (hallStatus == 0xFF) {
+                                tvHallStatus.setVisibility(View.GONE);
+                                tvTotalTriggerTimes.setVisibility(View.GONE);
+                            } else {
+                                tvHallStatus.setVisibility(View.VISIBLE);
+                                tvTotalTriggerTimes.setVisibility(View.VISIBLE);
+                                tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
+                                tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
+                            }
                         }
                         break;
                 }
@@ -131,9 +137,15 @@ public class HallSettingsActivity extends BaseActivity {
                                         if (length > 0) {
                                             int hallStatus = value[4] & 0xFF;
                                             int triggerTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
-                                            tvHallStatus.setVisibility(hallStatus == 0xFF ? View.GONE : View.VISIBLE);
-                                            tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
-                                            tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
+                                            if (hallStatus == 0xFF) {
+                                                tvHallStatus.setVisibility(View.GONE);
+                                                tvTotalTriggerTimes.setVisibility(View.GONE);
+                                            } else {
+                                                tvHallStatus.setVisibility(View.VISIBLE);
+                                                tvTotalTriggerTimes.setVisibility(View.VISIBLE);
+                                                tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
+                                                tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
+                                            }
                                         }
                                         break;
                                 }
@@ -164,6 +176,7 @@ public class HallSettingsActivity extends BaseActivity {
                                             ToastUtils.showToast(HallSettingsActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             tvHallStatus.setVisibility(cbHallEnable.isChecked() ? View.VISIBLE : View.GONE);
+                                            tvTotalTriggerTimes.setVisibility(cbHallEnable.isChecked() ? View.VISIBLE : View.GONE);
                                             AlertMessageDialog dialog = new AlertMessageDialog();
                                             dialog.setMessage("Saved Successfully！");
                                             dialog.setConfirm("OK");
@@ -180,7 +193,8 @@ public class HallSettingsActivity extends BaseActivity {
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             tvHallStatus.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
-                                            cbHallEnable.setEnabled(enable == 1);
+                                            tvTotalTriggerTimes.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
+                                            cbHallEnable.setChecked(enable == 1);
                                         }
                                         break;
 
@@ -240,6 +254,9 @@ public class HallSettingsActivity extends BaseActivity {
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setHallStatusEnable(cbHallEnable.isChecked() ? 1 : 0));
+        if (cbHallEnable.isChecked()) {
+            orderTasks.add(OrderTaskAssembler.getHallStatusSum());
+        }
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

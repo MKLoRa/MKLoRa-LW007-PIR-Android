@@ -96,6 +96,7 @@ public class DeviceFragment extends Fragment {
             ArrayList<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.setTimezone(value - 24));
             orderTasks.add(OrderTaskAssembler.getTimeZone());
+            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         });
         dialog.show(activity.getSupportFragmentManager());
     }

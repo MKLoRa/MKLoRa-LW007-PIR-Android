@@ -134,8 +134,15 @@ public class THSettingsActivity extends BaseActivity {
                         if (header == 0xED && flag == 0x02 && cmd == 0x01 && len == 0x04) {
                             int temp = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                             int humidity = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
-                            tvTempValue.setText(String.format("%s ℃", MokoUtils.getDecimalFormat("0.0").format(temp * 0.1f - 30)));
-                            tvHumidityValue.setText(String.format("%s%%RH", MokoUtils.getDecimalFormat("0.0").format(humidity * 0.1f)));
+                            if (temp == 0xFF && humidity == 0xFF) {
+                                tvTempValue.setVisibility(View.GONE);
+                                tvHumidityValue.setVisibility(View.GONE);
+                            } else {
+                                tvTempValue.setVisibility(View.VISIBLE);
+                                tvHumidityValue.setVisibility(View.VISIBLE);
+                                tvTempValue.setText(String.format("%s ℃", MokoUtils.getDecimalFormat("0.0").format(temp * 0.1f - 30)));
+                                tvHumidityValue.setText(String.format("%s%%RH", MokoUtils.getDecimalFormat("0.0").format(humidity * 0.1f)));
+                            }
                         }
                         break;
                 }
@@ -170,10 +177,15 @@ public class THSettingsActivity extends BaseActivity {
                                         if (length > 0) {
                                             int temp = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 6));
                                             int humidity = MokoUtils.toInt(Arrays.copyOfRange(value, 6, 8));
-                                            tvTempValue.setVisibility(temp == 0xFF ? View.GONE : View.VISIBLE);
-                                            tvHumidityValue.setVisibility(humidity == 0xFF ? View.GONE : View.VISIBLE);
-                                            tvTempValue.setText(String.format("%s ℃", MokoUtils.getDecimalFormat("0.0").format(temp * 0.1f - 30)));
-                                            tvHumidityValue.setText(String.format("%s%%RH", MokoUtils.getDecimalFormat("0.0").format(humidity * 0.1f)));
+                                            if (temp == 0xFF && humidity == 0xFF) {
+                                                tvTempValue.setVisibility(View.GONE);
+                                                tvHumidityValue.setVisibility(View.GONE);
+                                            } else {
+                                                tvTempValue.setVisibility(View.VISIBLE);
+                                                tvHumidityValue.setVisibility(View.VISIBLE);
+                                                tvTempValue.setText(String.format("%s ℃", MokoUtils.getDecimalFormat("0.0").format(temp * 0.1f - 30)));
+                                                tvHumidityValue.setText(String.format("%s%%RH", MokoUtils.getDecimalFormat("0.0").format(humidity * 0.1f)));
+                                            }
                                         }
                                         break;
                                 }
@@ -237,7 +249,7 @@ public class THSettingsActivity extends BaseActivity {
                                             int enable = value[4] & 0xFF;
                                             tvTempValue.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
                                             tvHumidityValue.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
-                                            cbThEnable.setEnabled(enable == 1);
+                                            cbThEnable.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_TH_SAMPLE_RATE:
@@ -249,7 +261,7 @@ public class THSettingsActivity extends BaseActivity {
                                     case KEY_TEMP_THRESHOLD_ALARM_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbTempThresholdAlarm.setEnabled(enable == 1);
+                                            cbTempThresholdAlarm.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_TEMP_THRESHOLD_ALARM:
@@ -263,7 +275,7 @@ public class THSettingsActivity extends BaseActivity {
                                     case KEY_TEMP_CHANGE_ALARM_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbTempChangeAlarm.setEnabled(enable == 1);
+                                            cbTempChangeAlarm.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_TEMP_CHANGE_ALARM_DURATION:
@@ -281,7 +293,7 @@ public class THSettingsActivity extends BaseActivity {
                                     case KEY_HUMIDITY_THRESHOLD_ALARM_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbHumidityThresholdAlarm.setEnabled(enable == 1);
+                                            cbHumidityThresholdAlarm.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_HUMIDITY_THRESHOLD_ALARM:
@@ -295,7 +307,7 @@ public class THSettingsActivity extends BaseActivity {
                                     case KEY_HUMIDITY_CHANGE_ALARM_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbHumidityChangeAlarm.setEnabled(enable == 1);
+                                            cbHumidityChangeAlarm.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_HUMIDITY_CHANGE_ALARM_DURATION:
@@ -431,7 +443,6 @@ public class THSettingsActivity extends BaseActivity {
     }
 
     private void saveParams() {
-
         final String rateStr = etSampleRate.getText().toString();
         final int rate = Integer.parseInt(rateStr);
         final String tempThresholdAlarmMinStr = etTempThresholdAlarmMin.getText().toString();
@@ -469,6 +480,9 @@ public class THSettingsActivity extends BaseActivity {
 
         orderTasks.add(OrderTaskAssembler.setTHEnable(cbThEnable.isChecked() ? 1 : 0));
 
+        if (cbThEnable.isChecked()) {
+            orderTasks.add(OrderTaskAssembler.getTHData());
+        }
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

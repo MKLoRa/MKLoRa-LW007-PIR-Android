@@ -12,6 +12,7 @@ public class AdvInfo {
     public boolean connectable;
     public boolean needPassword;
     public int battery;
+    public boolean isShowTH;
     public float temp;
     public float humidity;
     public float voltage;

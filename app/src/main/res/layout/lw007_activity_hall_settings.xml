@@ -88,13 +88,14 @@
             android:layout_alignTop="@id/hall_status_title"
             android:layout_alignParentRight="true"
             android:text="Closed"
+            android:visibility="gone"
             android:textColor="@color/lw007_black_333333"
             android:textSize="15sp"
             android:textStyle="bold" />
 
         <View
             style="@style/lw007_divider_line"
-            android:layout_below="@id/tv_hall_status"
+            android:layout_below="@id/hall_status_title"
             android:layout_marginTop="15dp" />
 
         <TextView
@@ -117,6 +118,7 @@
             android:layout_alignTop="@id/total_trigger_times"
             android:layout_alignParentRight="true"
             android:text="0"
+            android:visibility="gone"
             android:textColor="@color/lw007_black_333333"
             android:textSize="15sp"
             android:textStyle="bold" />

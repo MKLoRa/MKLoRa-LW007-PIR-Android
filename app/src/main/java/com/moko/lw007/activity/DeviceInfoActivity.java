@@ -414,8 +414,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             dialog.show(getSupportFragmentManager());
         } else if (disConnectType == 4) {
             AlertMessageDialog dialog = new AlertMessageDialog();
-            dialog.setTitle("Dismiss");
-            dialog.setMessage("Reboot successfully!\nPlease reconnect the device");
+            dialog.setTitle("Factory Reset");
+            dialog.setMessage("Factory reset successfully!\nPlease reconnect the device.");
             dialog.setConfirm("OK");
             dialog.setCancelGone();
             dialog.setOnAlertConfirmListener(() -> {
@@ -752,6 +752,17 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     public void onPowerOff(View view) {
+        if (isWindowLocked())
+            return;
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Warning!");
+        dialog.setMessage("Are you sure to turn off the device? Please make sure the device has a button to turn on!");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            showSyncingProgressDialog();
+            LoRaLW007MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setPowerOff());
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     public void selectTimeZone(View view) {
@@ -771,7 +782,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         if (isWindowLocked())
             return;
         AlertMessageDialog dialog = new AlertMessageDialog();
-        dialog.setTitle("Factory Reset!");
+        dialog.setTitle("Factory Reset");
         dialog.setMessage("After factory reset,all the data will be reseted to the factory values.");
         dialog.setConfirm("OK");
         dialog.setOnAlertConfirmListener(() -> {

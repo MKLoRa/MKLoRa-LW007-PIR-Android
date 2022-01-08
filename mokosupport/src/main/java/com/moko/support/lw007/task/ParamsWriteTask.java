@@ -163,9 +163,8 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_LORA_UPLINK_STRATEGY.getParamsKey(),
-                (byte) 0x04,
+                (byte) 0x03,
                 (byte) adr,
-                (byte) 0x01,
                 (byte) dr1,
                 (byte) dr2
         };

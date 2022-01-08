@@ -194,7 +194,7 @@ public class PIRSettingsActivity extends BaseActivity {
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             tvPirStatus.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
-                                            cbPirEnable.setEnabled(enable == 1);
+                                            cbPirEnable.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_PIR_REPORT_INTERVAL:
@@ -293,6 +293,9 @@ public class PIRSettingsActivity extends BaseActivity {
         orderTasks.add(OrderTaskAssembler.setPIRSensitivity(sensitivity));
         orderTasks.add(OrderTaskAssembler.setPIRDelayTime(delay));
         orderTasks.add(OrderTaskAssembler.setPIREnable(cbPirEnable.isChecked() ? 1 : 0));
+        if (cbPirEnable.isChecked()) {
+            orderTasks.add(OrderTaskAssembler.getPIR());
+        }
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

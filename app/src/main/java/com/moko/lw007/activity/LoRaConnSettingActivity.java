@@ -379,9 +379,9 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                             final int adr = value[4] & 0xFF;
                                             cbAdr.setChecked(adr == 1);
                                             llAdrOptions.setVisibility(cbAdr.isChecked() ? View.GONE : View.VISIBLE);
-                                            final int dr1 = value[6] & 0xFF;
+                                            final int dr1 = value[5] & 0xFF;
                                             mSelectedDr1 = dr1;
-                                            final int dr2 = value[7] & 0xFF;
+                                            final int dr2 = value[6] & 0xFF;
                                             mSelectedDr2 = dr2;
                                             tvDr1.setText(String.valueOf(dr1));
                                             tvDr2.setText(String.valueOf(dr2));

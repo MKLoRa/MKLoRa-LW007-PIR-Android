@@ -380,6 +380,11 @@ public class OrderTaskAssembler {
         task.restore();
         return task;
     }
+    public static OrderTask setPowerOff() {
+        ControlWriteTask task = new ControlWriteTask();
+        task.setPowerOff();
+        return task;
+    }
 
     public static OrderTask setTime() {
         ControlWriteTask task = new ControlWriteTask();

@@ -39,8 +39,16 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             return null;
         int deviceType = -1;
         int battery = ((manufacturerSpecificDataByte[0] & 0x40) == 0x40) ? 1 : 0;
-        float temp = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 1, 3)) * 0.1f - 30;
-        float humidity = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 3, 5)) * 0.1f;
+        int tempInt = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 1, 3));
+        int humidityInt = MokoUtils.toInt(Arrays.copyOfRange(manufacturerSpecificDataByte, 3, 5));
+        float temp = 0f;
+        float humidity = 0f;
+        boolean isShowTH = false;
+        if (tempInt != 65535 && humidityInt != 65535) {
+            isShowTH = true;
+            temp = tempInt * 0.1f - 30;
+            humidity = humidityInt * 0.1f;
+        }
         float voltage = 2.2f + (manufacturerSpecificDataByte[5] & 0xFF) * 0.1f;
         int txPower = manufacturerSpecificDataByte[6];
         int needPassword = manufacturerSpecificDataByte[13];
@@ -72,6 +80,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.temp = temp;
             advInfo.humidity = humidity;
             advInfo.voltage = voltage;
+            advInfo.isShowTH = isShowTH;
             advInfo.needPassword = needPassword == 1;
         } else {
             advInfo = new AdvInfo();
@@ -86,6 +95,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.temp = temp;
             advInfo.humidity = humidity;
             advInfo.voltage = voltage;
+            advInfo.isShowTH = isShowTH;
             advInfo.needPassword = needPassword == 1;
             advInfoHashMap.put(deviceInfo.mac, advInfo);
         }

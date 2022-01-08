@@ -13,7 +13,6 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.lw007.R;
 import com.moko.lw007.R2;
 import com.moko.lw007.activity.DeviceInfoActivity;
-import com.moko.lw007.entity.TxPowerEnum;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
 

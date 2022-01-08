@@ -72,7 +72,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lw007_activity_export_data);
         ButterKnife.bind(this);
-        mDeviceMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC);
+        mDeviceMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC).replaceAll(":", "");
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // 优先保存到SD卡中
             logDirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW007") + File.separator + mDeviceMac;
@@ -95,7 +95,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
                 File logFile = logFiles[i];
                 ExportData data = new ExportData();
                 data.filePath = logFile.getAbsolutePath();
-                data.name = logFile.getName();
+                data.name = logFile.getName().replaceAll(".txt", "");
                 exportDatas.add(data);
             }
             adapter.replaceData(exportDatas);
@@ -170,7 +170,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
             ivSync.startAnimation(animation);
             LoRaLW007MokoSupport.getInstance().enableLogNotify();
             Calendar calendar = Calendar.getInstance();
-            syncTime = Utils.calendar2strDate(calendar, AppConstants.PATTERN_YYYY_MM_DD_HH_MM_SS);
+            syncTime = Utils.calendar2strDate(calendar, "yyyy-MM-dd HH-mm-ss");
         } else {
             LoRaLW007MokoSupport.getInstance().disableLogNotify();
             stopSync();
@@ -196,25 +196,31 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
     public void onEmpty(View view) {
         if (isWindowLocked())
             return;
-        Iterator<ExportData> iterator = exportDatas.iterator();
-        while (iterator.hasNext()) {
-            ExportData exportData = iterator.next();
-            if (!exportData.isSelected)
-                continue;
-            File file = new File(exportData.filePath);
-            if (file.exists())
-                file.delete();
-            iterator.remove();
-            selectedCount--;
-        }
-        if (selectedCount > 0) {
-            tvEmpty.setEnabled(true);
-            tvExport.setEnabled(true);
-        } else {
-            tvEmpty.setEnabled(false);
-            tvExport.setEnabled(false);
-        }
-        adapter.replaceData(exportDatas);
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Warning!");
+        dialog.setMessage("Are you sure to empty the saved debugger log?");
+        dialog.setOnAlertConfirmListener(() -> {
+            Iterator<ExportData> iterator = exportDatas.iterator();
+            while (iterator.hasNext()) {
+                ExportData exportData = iterator.next();
+                if (!exportData.isSelected)
+                    continue;
+                File file = new File(exportData.filePath);
+                if (file.exists())
+                    file.delete();
+                iterator.remove();
+                selectedCount--;
+            }
+            if (selectedCount > 0) {
+                tvEmpty.setEnabled(true);
+                tvExport.setEnabled(true);
+            } else {
+                tvEmpty.setEnabled(false);
+                tvExport.setEnabled(false);
+            }
+            adapter.replaceData(exportDatas);
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     public void onExport(View view) {
@@ -230,7 +236,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
             File[] files = selectedFiles.toArray(new File[]{});
             // 发送邮件
             String address = "Development@mokotechnology.com";
-            String title = "Tracked Log";
+            String title = "Debugger Log";
             String content = title;
             Utils.sendEmail(ExportDataActivity.this, address, content, title, "Choose Email Client", files);
         }
@@ -273,9 +279,9 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
             dialog.show(getSupportFragmentManager());
             return;
         }
-//            File logDir = new File(logDirPath);
-//            if (!logDir.exists())
-//                logDir.mkdirs();
+        File logDir = new File(logDirPath);
+        if (!logDir.exists())
+            logDir.mkdirs();
         String logFilePath = logDirPath + File.separator + String.format("%s.txt", syncTime);
         writeLogFile2SDCard(logFilePath);
         ExportData exportData = new ExportData();
