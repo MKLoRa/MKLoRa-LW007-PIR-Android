@@ -412,10 +412,21 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 finish();
             });
             dialog.show(getSupportFragmentManager());
-        } else if (disConnectType == 4) {
+        } else if (disConnectType == 5) {
             AlertMessageDialog dialog = new AlertMessageDialog();
             dialog.setTitle("Factory Reset");
             dialog.setMessage("Factory reset successfully!\nPlease reconnect the device.");
+            dialog.setConfirm("OK");
+            dialog.setCancelGone();
+            dialog.setOnAlertConfirmListener(() -> {
+                setResult(RESULT_OK);
+                finish();
+            });
+            dialog.show(getSupportFragmentManager());
+        } else if (disConnectType == 4) {
+            AlertMessageDialog dialog = new AlertMessageDialog();
+            dialog.setTitle("Dismiss");
+            dialog.setMessage("Reboot successfully!\nPlease reconnect the device");
             dialog.setConfirm("OK");
             dialog.setCancelGone();
             dialog.setOnAlertConfirmListener(() -> {

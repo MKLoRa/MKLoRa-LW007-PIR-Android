@@ -60,6 +60,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.moko.lw007.activity.ExportDataActivity"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
