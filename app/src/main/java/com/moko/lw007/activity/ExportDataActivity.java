@@ -3,7 +3,6 @@ package com.moko.lw007.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,7 +15,6 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw007.AppConstants;
-import com.moko.lw007.BuildConfig;
 import com.moko.lw007.R;
 import com.moko.lw007.R2;
 import com.moko.lw007.adapter.ExportDataListAdapter;
@@ -73,13 +71,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
         setContentView(R.layout.lw007_activity_export_data);
         ButterKnife.bind(this);
         mDeviceMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC).replaceAll(":", "");
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            // 优先保存到SD卡中
-            logDirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW007") + File.separator + mDeviceMac;
-        } else {
-            // 如果SD卡不存在，就保存到本应用的目录下
-            logDirPath = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW007") + File.separator + mDeviceMac;
-        }
+        logDirPath = LoRaLW007MainActivity.PATH_LOGCAT + File.separator + mDeviceMac;
         exportDatas = new ArrayList<>();
         adapter = new ExportDataListAdapter();
         adapter.openLoadAnimation();

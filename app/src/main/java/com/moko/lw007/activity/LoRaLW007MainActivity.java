@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -49,6 +51,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -88,11 +91,25 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
     private boolean isPasswordError;
     private boolean isNeedPassword;
 
+    public static String PATH_LOGCAT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lw007_activity_main);
         ButterKnife.bind(this);
+        // 初始化Xlog
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            // 优先保存到SD卡中
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                PATH_LOGCAT = getExternalFilesDir(null).getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW007");
+            } else {
+                PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW007");
+            }
+        } else {
+            // 如果SD卡不存在，就保存到本应用的目录下
+            PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW007");
+        }
         LoRaLW007MokoSupport.getInstance().init(getApplicationContext());
         mSavedPassword = SPUtiles.getStringValue(this, AppConstants.SP_KEY_SAVED_PASSWORD_LW007, "");
         beaconInfoHashMap = new ConcurrentHashMap<>();
@@ -108,19 +125,6 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
         rvDevices.setAdapter(adapter);
         mHandler = new Handler(Looper.getMainLooper());
         mokoBleScanner = new MokoBleScanner(this);
-        StringBuffer buffer = new StringBuffer();
-        // 记录机型
-        buffer.append("机型：");
-        buffer.append(android.os.Build.MODEL);
-        buffer.append("=====");
-        // 记录版本号
-        buffer.append("手机系统版本：");
-        buffer.append(android.os.Build.VERSION.RELEASE);
-        buffer.append("=====");
-        // 记录APP版本
-        buffer.append("APP版本：");
-        buffer.append(Utils.getVersionInfo(this));
-        XLog.d(buffer.toString());
         EventBus.getDefault().register(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
