@@ -453,7 +453,7 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
             }
             showLoadingMessageDialog();
             mHandler.postDelayed(() -> {
-                // open password notify and set passwrord
+                // open password notify and set password
                 List<OrderTask> orderTasks = new ArrayList<>();
                 orderTasks.add(OrderTaskAssembler.setPassword(mPassword));
                 LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
