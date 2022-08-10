@@ -24,6 +24,8 @@ public class ControlReadTask extends OrderTask {
             case KEY_PIR:
             case KEY_HALL_STATUS_SUM:
             case KEY_TH_DATA:
+            case KEY_PCBA_STATUS:
+            case KEY_SELFTEST_STATUS:
                 createGetConfigData(key.getParamsKey());
                 break;
         }

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -408,6 +409,33 @@ public class SystemInfoActivity extends BaseActivity {
                     Toast.makeText(this, "file is not exists!", Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    // 记录上次页面控件点击时间,屏蔽无效点击事件
+    private long mLastOnClickTime = 0;
+
+    private int mTriggerSum;
+
+    private boolean isTriggerValid() {
+        long current = SystemClock.elapsedRealtime();
+        if (current - mLastOnClickTime > 500) {
+            mTriggerSum = 0;
+            mLastOnClickTime = current;
+            return false;
+        } else {
+            mTriggerSum++;
+            if (mTriggerSum == 2) {
+                mTriggerSum = 0;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public void onTest(View view) {
+        if (isTriggerValid()) {
+            startActivity(new Intent(this, SelfTestActivity.class));
         }
     }
 }

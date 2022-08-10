@@ -359,6 +359,18 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getPCBAStatus() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_PCBA_STATUS);
+        return task;
+    }
+
+    public static OrderTask getSelfTestStatus() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_SELFTEST_STATUS);
+        return task;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // WIRTE
@@ -380,6 +392,7 @@ public class OrderTaskAssembler {
         task.restore();
         return task;
     }
+
     public static OrderTask setPowerOff() {
         ControlWriteTask task = new ControlWriteTask();
         task.setPowerOff();

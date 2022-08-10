@@ -16,6 +16,8 @@ public enum ControlKeyEnum implements Serializable {
     KEY_PIR(0x58),
     KEY_HALL_STATUS_SUM(0x59),
     KEY_TH_DATA(0x5A),
+    KEY_PCBA_STATUS(0x5C),
+    KEY_SELFTEST_STATUS(0x5D),
     ;
 
     private int paramsKey;
