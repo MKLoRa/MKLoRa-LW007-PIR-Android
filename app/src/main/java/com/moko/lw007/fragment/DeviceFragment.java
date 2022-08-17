@@ -104,7 +104,7 @@ public class DeviceFragment extends Fragment {
     public void setLowPowerPrompt(int prompt) {
         mSelectedLowPowerPrompt = prompt;
         tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
-        tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
+        tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips_lw007, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
     }
 
     public void setLowPowerPayload(int payload) {
@@ -122,7 +122,7 @@ public class DeviceFragment extends Fragment {
         dialog.setListener(value -> {
             mSelectedLowPowerPrompt = value;
             tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
-            tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(value)));
+            tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips_lw007, mLowPowerPrompts.get(value)));
             activity.showSyncingProgressDialog();
             ArrayList<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.setLowPowerPrompt(value));

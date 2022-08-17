@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:text="@string/low_power_prompt_tips"
+                android:text="@string/low_power_prompt_tips_lw007"
                 android:textColor="@color/lw007_black_333333"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"

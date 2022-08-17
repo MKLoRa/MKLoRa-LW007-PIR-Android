@@ -39,7 +39,7 @@
     <string name="general_hall_settings">Hall Settings</string>
     <string name="general_th_settings"><![CDATA[T&H Settings]]></string>
     <string name="device_information">Device Information</string>
-    <string name="low_power_prompt_tips">*When the battery is less than or equal to %s, the green LED will flash once every 10 seconds.</string>
+    <string name="low_power_prompt_tips_lw007">*When the battery is less than or equal to %s, the red LED will flash once every 10 seconds.</string>
     <string-array name="lw007_pir_params">
         <item>Low</item>
         <item>Medium</item>

@@ -125,14 +125,8 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
                 switch (orderCHAR) {
                     case CHAR_LOG:
                         final int length = value.length;
-                        if (length < 4)
-                            return;
-                        int header = value[0] & 0xFF;
-                        int flag = value[1] & 0xFF;
-                        int cmd = value[2] & 0xFF;
-                        int len = value[3] & 0xFF;
-                        if (header == 0xED && flag == 0x02 && cmd == 0x01) {
-                            String log = new String(Arrays.copyOfRange(value, 4, 4 + len));
+                        if (length > 0) {
+                            String log = new String(value);
                             storeString.append(log);
                         }
                         break;
