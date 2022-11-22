@@ -49,7 +49,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             temp = tempInt * 0.1f - 30;
             humidity = humidityInt * 0.1f;
         }
-        float voltage = 2.2f + (manufacturerSpecificDataByte[5] & 0xFF) * 0.1f;
+//        float voltage = 2.2f + (manufacturerSpecificDataByte[5] & 0xFF) * 0.1f;
         int txPower = manufacturerSpecificDataByte[6];
         int needPassword = manufacturerSpecificDataByte[13];
         Iterator iterator = map.keySet().iterator();
@@ -79,7 +79,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.connectable = result.isConnectable();
             advInfo.temp = temp;
             advInfo.humidity = humidity;
-            advInfo.voltage = voltage;
+//            advInfo.voltage = voltage;
             advInfo.isShowTH = isShowTH;
             advInfo.needPassword = needPassword == 1;
         } else {
@@ -94,7 +94,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.connectable = result.isConnectable();
             advInfo.temp = temp;
             advInfo.humidity = humidity;
-            advInfo.voltage = voltage;
+//            advInfo.voltage = voltage;
             advInfo.isShowTH = isShowTH;
             advInfo.needPassword = needPassword == 1;
             advInfoHashMap.put(deviceInfo.mac, advInfo);

@@ -67,7 +67,7 @@ public class ParamsReadTask extends OrderTask {
             case KEY_TIME_ZONE:
             case KEY_CHANGE_PASSWORD:
             case KEY_HEARTBEAT:
-            case KEY_LOW_POWER_PROMPT:
+//            case KEY_LOW_POWER_PROMPT:
             case KEY_LOW_POWER_PAYLOAD:
             case KEY_LED_INDICATOR_STATUS:
                 createGetConfigData(key.getParamsKey());

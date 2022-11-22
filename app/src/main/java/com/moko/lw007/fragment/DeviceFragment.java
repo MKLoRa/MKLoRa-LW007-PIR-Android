@@ -26,16 +26,16 @@ public class DeviceFragment extends Fragment {
     private static final String TAG = DeviceFragment.class.getSimpleName();
     @BindView(R2.id.tv_time_zone)
     TextView tvTimeZone;
-    @BindView(R2.id.tv_low_power_prompt)
-    TextView tvLowPowerPrompt;
+//    @BindView(R2.id.tv_low_power_prompt)
+//    TextView tvLowPowerPrompt;
     @BindView(R2.id.iv_low_power_payload)
     ImageView ivLowPowerPayload;
-    @BindView(R2.id.tv_low_power_prompt_tips)
-    TextView tvLowPowerPromptTips;
+//    @BindView(R2.id.tv_low_power_prompt_tips)
+//    TextView tvLowPowerPromptTips;
     private ArrayList<String> mTimeZones;
     private int mSelectedTimeZone;
-    private ArrayList<String> mLowPowerPrompts;
-    private int mSelectedLowPowerPrompt;
+//    private ArrayList<String> mLowPowerPrompts;
+//    private int mSelectedLowPowerPrompt;
     private boolean mLowPowerPayloadEnable;
 
 
@@ -75,9 +75,9 @@ public class DeviceFragment extends Fragment {
                 }
             }
         }
-        mLowPowerPrompts = new ArrayList<>();
-        mLowPowerPrompts.add("5%");
-        mLowPowerPrompts.add("10%");
+//        mLowPowerPrompts = new ArrayList<>();
+//        mLowPowerPrompts.add("5%");
+//        mLowPowerPrompts.add("10%");
         return view;
     }
 
@@ -101,11 +101,11 @@ public class DeviceFragment extends Fragment {
         dialog.show(activity.getSupportFragmentManager());
     }
 
-    public void setLowPowerPrompt(int prompt) {
-        mSelectedLowPowerPrompt = prompt;
-        tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
-        tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips_lw007, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
-    }
+//    public void setLowPowerPrompt(int prompt) {
+//        mSelectedLowPowerPrompt = prompt;
+//        tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
+//        tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips_lw007, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
+//    }
 
     public void setLowPowerPayload(int payload) {
         mLowPowerPayloadEnable = payload == 1;
@@ -116,22 +116,22 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-    public void showLowPowerDialog() {
-        BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mLowPowerPrompts, mSelectedLowPowerPrompt);
-        dialog.setListener(value -> {
-            mSelectedLowPowerPrompt = value;
-            tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
-            tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips_lw007, mLowPowerPrompts.get(value)));
-            activity.showSyncingProgressDialog();
-            ArrayList<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setLowPowerPrompt(value));
-            orderTasks.add(OrderTaskAssembler.getLowPowerPrompt());
-            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        });
-        dialog.show(activity.getSupportFragmentManager());
-
-    }
+//    public void showLowPowerDialog() {
+//        BottomDialog dialog = new BottomDialog();
+//        dialog.setDatas(mLowPowerPrompts, mSelectedLowPowerPrompt);
+//        dialog.setListener(value -> {
+//            mSelectedLowPowerPrompt = value;
+//            tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
+//            tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips_lw007, mLowPowerPrompts.get(value)));
+//            activity.showSyncingProgressDialog();
+//            ArrayList<OrderTask> orderTasks = new ArrayList<>();
+//            orderTasks.add(OrderTaskAssembler.setLowPowerPrompt(value));
+//            orderTasks.add(OrderTaskAssembler.getLowPowerPrompt());
+//            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+//        });
+//        dialog.show(activity.getSupportFragmentManager());
+//
+//    }
 
     public void changeLowPowerPayload() {
         mLowPowerPayloadEnable = !mLowPowerPayloadEnable;

@@ -15,5 +15,5 @@ public class AdvInfo {
     public boolean isShowTH;
     public float temp;
     public float humidity;
-    public float voltage;
+//    public float voltage;
 }

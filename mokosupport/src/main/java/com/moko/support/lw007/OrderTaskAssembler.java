@@ -305,11 +305,11 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getLowPowerPrompt() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PROMPT);
-        return task;
-    }
+//    public static OrderTask getLowPowerPrompt() {
+//        ParamsReadTask task = new ParamsReadTask();
+//        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PROMPT);
+//        return task;
+//    }
 
     public static OrderTask getLowPowerPayload() {
         ParamsReadTask task = new ParamsReadTask();
@@ -329,11 +329,11 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getBattery() {
-        ControlReadTask task = new ControlReadTask();
-        task.setData(ControlKeyEnum.KEY_BATTERY);
-        return task;
-    }
+//    public static OrderTask getBattery() {
+//        ControlReadTask task = new ControlReadTask();
+//        task.setData(ControlKeyEnum.KEY_BATTERY);
+//        return task;
+//    }
 
     public static OrderTask getMacAddress() {
         ControlReadTask task = new ControlReadTask();
@@ -371,6 +371,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getBatteryInfo() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_BATTERY_INFO);
+        return task;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // WIRTE
@@ -402,6 +408,12 @@ public class OrderTaskAssembler {
     public static OrderTask setTime() {
         ControlWriteTask task = new ControlWriteTask();
         task.setTime();
+        return task;
+    }
+
+    public static OrderTask setBatteryReset() {
+        ControlWriteTask task = new ControlWriteTask();
+        task.setBatteryReset();
         return task;
     }
 
@@ -652,11 +664,11 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setLowPowerPrompt(int lowPowerPrompt) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setLowPowerPrompt(lowPowerPrompt);
-        return task;
-    }
+//    public static OrderTask setLowPowerPrompt(int lowPowerPrompt) {
+//        ParamsWriteTask task = new ParamsWriteTask();
+//        task.setLowPowerPrompt(lowPowerPrompt);
+//        return task;
+//    }
 
     public static OrderTask setLowPowerPayload(int payload) {
         ParamsWriteTask task = new ParamsWriteTask();

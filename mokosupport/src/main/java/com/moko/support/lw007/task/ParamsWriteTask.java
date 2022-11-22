@@ -485,15 +485,15 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setLowPowerPrompt(@IntRange(from = 0, to = 1) int lowPowerPrompt) {
-        data = new byte[]{
-                (byte) 0xED,
-                (byte) 0x01,
-                (byte) ParamsKeyEnum.KEY_LOW_POWER_PROMPT.getParamsKey(),
-                (byte) 0x01,
-                (byte) lowPowerPrompt
-        };
-    }
+//    public void setLowPowerPrompt(@IntRange(from = 0, to = 1) int lowPowerPrompt) {
+//        data = new byte[]{
+//                (byte) 0xED,
+//                (byte) 0x01,
+//                (byte) ParamsKeyEnum.KEY_LOW_POWER_PROMPT.getParamsKey(),
+//                (byte) 0x01,
+//                (byte) lowPowerPrompt
+//        };
+//    }
 
     public void setLowPowerPayload(@IntRange(from = 0, to = 1) int lowPowerPayload) {
         data = new byte[]{

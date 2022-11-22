@@ -232,6 +232,15 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         if (result == 1)
                                             ToastUtils.showToast(DeviceInfoActivity.this, "Time sync completed!");
                                         break;
+                                    case KEY_BATTERY_RESET:
+                                        if (result == 1) {
+                                            AlertMessageDialog dialog = new AlertMessageDialog();
+                                            dialog.setMessage("Reset Successfully！");
+                                            dialog.setConfirm("OK");
+                                            dialog.setCancelGone();
+                                            dialog.show(getSupportFragmentManager());
+                                        }
+                                        break;
                                 }
                             }
                             if (flag == 0x00) {
@@ -277,7 +286,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                     case KEY_BLE_LOGIN_MODE:
                                     case KEY_HEARTBEAT:
                                     case KEY_TIME_ZONE:
-                                    case KEY_LOW_POWER_PROMPT:
+//                                    case KEY_LOW_POWER_PROMPT:
                                     case KEY_LOW_POWER_PAYLOAD:
                                         if (result != 1) {
                                             savedParamsError = true;
@@ -368,12 +377,12 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                             deviceFragment.setTimeZone(timeZone);
                                         }
                                         break;
-                                    case KEY_LOW_POWER_PROMPT:
-                                        if (length > 0) {
-                                            int prompt = value[4] & 0xFF;
-                                            deviceFragment.setLowPowerPrompt(prompt);
-                                        }
-                                        break;
+//                                    case KEY_LOW_POWER_PROMPT:
+//                                        if (length > 0) {
+//                                            int prompt = value[4] & 0xFF;
+//                                            deviceFragment.setLowPowerPrompt(prompt);
+//                                        }
+//                                        break;
                                     case KEY_LOW_POWER_PAYLOAD:
                                         if (length > 0) {
                                             int payload = value[4] & 0xFF;
@@ -617,7 +626,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         List<OrderTask> orderTasks = new ArrayList<>();
         // device
         orderTasks.add(OrderTaskAssembler.getTimeZone());
-        orderTasks.add(OrderTaskAssembler.getLowPowerPrompt());
+//        orderTasks.add(OrderTaskAssembler.getLowPowerPrompt());
         orderTasks.add(OrderTaskAssembler.getLowPowerPayload());
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
@@ -750,11 +759,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     // device
-    public void selectLowPowerPrompt(View view) {
-        if (isWindowLocked())
-            return;
-        deviceFragment.showLowPowerDialog();
-    }
+//    public void selectLowPowerPrompt(View view) {
+//        if (isWindowLocked())
+//            return;
+//        deviceFragment.showLowPowerDialog();
+//    }
 
     public void onLowPowerPayload(View view) {
         if (isWindowLocked())
@@ -799,6 +808,21 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         dialog.setOnAlertConfirmListener(() -> {
             showSyncingProgressDialog();
             LoRaLW007MokoSupport.getInstance().sendOrder(OrderTaskAssembler.restore());
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+
+    public void onBatteryReset(View view) {
+        if (isWindowLocked())
+            return;
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Warning！");
+        dialog.setMessage("Are you sure to reset battery?");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            showSyncingProgressDialog();
+            LoRaLW007MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setBatteryReset());
         });
         dialog.show(getSupportFragmentManager());
     }

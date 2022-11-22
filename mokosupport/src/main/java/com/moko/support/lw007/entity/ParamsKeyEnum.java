@@ -58,7 +58,7 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_TIME_ZONE(0x43),
     KEY_CHANGE_PASSWORD(0x44),
     KEY_HEARTBEAT(0x46),
-    KEY_LOW_POWER_PROMPT(0x47),
+//    KEY_LOW_POWER_PROMPT(0x47),
     KEY_LOW_POWER_PAYLOAD(0x48),
     KEY_LED_INDICATOR_STATUS(0x49),
     ;

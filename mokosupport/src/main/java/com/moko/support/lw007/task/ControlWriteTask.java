@@ -64,4 +64,13 @@ public class ControlWriteTask extends OrderTask {
                 bytes[3],
         };
     }
+
+    public void setBatteryReset() {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ControlKeyEnum.KEY_BATTERY_RESET.getParamsKey(),
+                (byte) 0x00
+        };
+    }
 }

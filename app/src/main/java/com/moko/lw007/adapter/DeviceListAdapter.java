@@ -24,7 +24,7 @@ public class DeviceListAdapter extends BaseQuickAdapter<AdvInfo, BaseViewHolder>
         final String intervalTime = item.intervalTime == 0 ? "<->N/A" : String.format("<->%dms", item.intervalTime);
         helper.setText(R.id.tv_track_interval, intervalTime);
         helper.setText(R.id.tv_tx_power, String.format("Tx Power:%ddBm", item.txPower));
-        helper.setText(R.id.tv_voltage, String.format("%s V", MokoUtils.getDecimalFormat("0.0").format(item.voltage)));
+//        helper.setText(R.id.tv_voltage, String.format("%s V", MokoUtils.getDecimalFormat("0.0").format(item.voltage)));
         helper.setVisible(R.id.tv_temp, item.isShowTH);
         helper.setVisible(R.id.tv_humidity, item.isShowTH);
         helper.setText(R.id.tv_temp, String.format("%s ℃", MokoUtils.getDecimalFormat("0.0").format(item.temp)));
