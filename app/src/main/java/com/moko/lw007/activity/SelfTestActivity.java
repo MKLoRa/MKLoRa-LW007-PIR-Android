@@ -3,7 +3,6 @@ package com.moko.lw007.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -11,8 +10,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw007.R;
-import com.moko.lw007.R2;
+import com.moko.lw007.databinding.Lw007ActivitySelftestBinding;
 import com.moko.lw007.dialog.LoadingMessageDialog;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
@@ -27,31 +25,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class SelfTestActivity extends BaseActivity {
 
-    @BindView(R2.id.tv_pcba_status)
-    TextView tvPcbaStatus;
-    @BindView(R2.id.tv_runtime)
-    TextView tvRuntime;
-    @BindView(R2.id.tv_adv_times)
-    TextView tvAdvTimes;
-    @BindView(R2.id.tv_th_sample_rate)
-    TextView tvSampleRate;
-    @BindView(R2.id.tv_lora_power)
-    TextView tvLoraPower;
-    @BindView(R2.id.tv_lora_transmission_times)
-    TextView tvTransmissionTimes;
-    @BindView(R2.id.tv_battery_consume)
-    TextView tvBatteryConsume;
+    private Lw007ActivitySelftestBinding mBind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw007_activity_selftest);
-        ButterKnife.bind(this);
+        mBind = Lw007ActivitySelftestBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
@@ -104,23 +86,23 @@ public class SelfTestActivity extends BaseActivity {
                                 switch (configKeyEnum) {
                                     case KEY_PCBA_STATUS:
                                         if (length > 0) {
-                                            tvPcbaStatus.setText(String.valueOf(value[4] & 0xFF));
+                                            mBind.tvPcbaStatus.setText(String.valueOf(value[4] & 0xFF));
                                         }
                                         break;
                                     case KEY_BATTERY_INFO:
                                         if (length == 24) {
                                             int runtime = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 8));
-                                            tvRuntime.setText(String.format("%d s", runtime));
+                                            mBind.tvRuntime.setText(String.format("%d s", runtime));
                                             int advTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 8, 12));
-                                            tvAdvTimes.setText(String.format("%d times", advTimes));
+                                            mBind.tvAdvTimes.setText(String.format("%d times", advTimes));
                                             int thSampleRate = MokoUtils.toInt(Arrays.copyOfRange(value, 12, 16));
-                                            tvSampleRate.setText(String.format("%d times", thSampleRate));
+                                            mBind.tvThSampleRate.setText(String.format("%d times", thSampleRate));
                                             int loraPower = MokoUtils.toInt(Arrays.copyOfRange(value, 16, 20));
-                                            tvLoraPower.setText(String.format("%d mAS", loraPower));
+                                            mBind.tvLoraPower.setText(String.format("%d mAS", loraPower));
                                             int loraTransmissionTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 20, 24));
-                                            tvTransmissionTimes.setText(String.format("%d times", loraTransmissionTimes));
+                                            mBind.tvLoraTransmissionTimes.setText(String.format("%d times", loraTransmissionTimes));
                                             String batteryConsumeStr = MokoUtils.getDecimalFormat("0.###").format(MokoUtils.toInt(Arrays.copyOfRange(value, 24, 28)) * 0.001f);
-                                            tvBatteryConsume.setText(String.format("%s mAH", batteryConsumeStr));
+                                            mBind.tvBatteryConsume.setText(String.format("%s mAH", batteryConsumeStr));
                                         }
                                         break;
                                 }

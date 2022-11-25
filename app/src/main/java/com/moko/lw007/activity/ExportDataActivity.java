@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.moko.ble.lib.MokoConstants;
@@ -16,8 +14,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw007.AppConstants;
 import com.moko.lw007.R;
-import com.moko.lw007.R2;
 import com.moko.lw007.adapter.ExportDataListAdapter;
+import com.moko.lw007.databinding.Lw007ActivityExportDataBinding;
 import com.moko.lw007.dialog.AlertMessageDialog;
 import com.moko.lw007.entity.ExportData;
 import com.moko.lw007.utils.Utils;
@@ -32,28 +30,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter.OnItemClickListener {
 
     public static String TAG = ExportDataActivity.class.getSimpleName();
-    @BindView(R2.id.tv_sync_switch)
-    TextView tvSyncSwitch;
-    @BindView(R2.id.iv_sync)
-    ImageView ivSync;
-    @BindView(R2.id.tv_export)
-    TextView tvExport;
-    @BindView(R2.id.tv_empty)
-    TextView tvEmpty;
-    @BindView(R2.id.rv_export_data)
-    RecyclerView rvExportData;
+
+    private Lw007ActivityExportDataBinding mBind;
     private StringBuilder storeString;
     private ArrayList<ExportData> exportDatas;
     private boolean isSync;
@@ -68,8 +54,8 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw007_activity_export_data);
-        ButterKnife.bind(this);
+        mBind = Lw007ActivityExportDataBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mDeviceMac = getIntent().getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC).replaceAll(":", "");
         logDirPath = LoRaLW007MainActivity.PATH_LOGCAT + File.separator + mDeviceMac;
         exportDatas = new ArrayList<>();
@@ -77,8 +63,8 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
         adapter.openLoadAnimation();
         adapter.replaceData(exportDatas);
         adapter.setOnItemClickListener(this);
-        rvExportData.setLayoutManager(new LinearLayoutManager(this));
-        rvExportData.setAdapter(adapter);
+        mBind.rvExportData.setLayoutManager(new LinearLayoutManager(this));
+        mBind.rvExportData.setAdapter(adapter);
         EventBus.getDefault().register(this);
         File file = new File(logDirPath);
         if (file.exists()) {
@@ -105,7 +91,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
             if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
                 isDisconnected = true;
                 // 中途断开，要先保存数据
-                tvSyncSwitch.setEnabled(false);
+                mBind.tvSyncSwitch.setEnabled(false);
                 if (isSync)
                     stopSync();
             }
@@ -150,10 +136,10 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
             return;
         }
         if (animation == null) {
-            tvSyncSwitch.setText("Stop");
+            mBind.tvSyncSwitch.setText("Stop");
             isSync = true;
             animation = AnimationUtils.loadAnimation(this, R.anim.lw007_rotate_refresh);
-            ivSync.startAnimation(animation);
+            mBind.ivSync.startAnimation(animation);
             LoRaLW007MokoSupport.getInstance().enableLogNotify();
             Calendar calendar = Calendar.getInstance();
             syncTime = Utils.calendar2strDate(calendar, "yyyy-MM-dd HH-mm-ss");
@@ -198,11 +184,11 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
                 selectedCount--;
             }
             if (selectedCount > 0) {
-                tvEmpty.setEnabled(true);
-                tvExport.setEnabled(true);
+                mBind.tvEmpty.setEnabled(true);
+                mBind.tvExport.setEnabled(true);
             } else {
-                tvEmpty.setEnabled(false);
-                tvExport.setEnabled(false);
+                mBind.tvEmpty.setEnabled(false);
+                mBind.tvExport.setEnabled(false);
             }
             adapter.replaceData(exportDatas);
         });
@@ -251,10 +237,10 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
     }
 
     private void stopSync() {
-        tvSyncSwitch.setText("Start");
+        mBind.tvSyncSwitch.setText("Start");
         isSync = false;
         // 关闭通知
-        ivSync.clearAnimation();
+        mBind.ivSync.clearAnimation();
         animation = null;
         if (storeString.length() == 0) {
             AlertMessageDialog dialog = new AlertMessageDialog();
@@ -293,11 +279,11 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
                 selectedCount--;
             }
             if (selectedCount > 0) {
-                tvEmpty.setEnabled(true);
-                tvExport.setEnabled(true);
+                mBind.tvEmpty.setEnabled(true);
+                mBind.tvExport.setEnabled(true);
             } else {
-                tvEmpty.setEnabled(false);
-                tvExport.setEnabled(false);
+                mBind.tvEmpty.setEnabled(false);
+                mBind.tvExport.setEnabled(false);
             }
             adapter.notifyItemChanged(position);
         }

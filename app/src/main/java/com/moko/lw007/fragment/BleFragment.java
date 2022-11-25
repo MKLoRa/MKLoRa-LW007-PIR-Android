@@ -8,16 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.lw007.R;
-import com.moko.lw007.R2;
 import com.moko.lw007.activity.DeviceInfoActivity;
+import com.moko.lw007.databinding.Lw007FragmentBleBinding;
 import com.moko.lw007.entity.TxPowerEnum;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
@@ -25,36 +21,10 @@ import com.moko.support.lw007.OrderTaskAssembler;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private static final String TAG = BleFragment.class.getSimpleName();
     private final String FILTER_ASCII = "[ -~]*";
-
-    @BindView(R2.id.et_adv_name)
-    EditText etAdvName;
-    @BindView(R2.id.et_adv_interval)
-    EditText etAdvInterval;
-    @BindView(R2.id.iv_connectable)
-    ImageView ivConnectable;
-    @BindView(R2.id.iv_login_mode)
-    ImageView ivLoginMode;
-    @BindView(R2.id.tv_change_password)
-    TextView tvChangePassword;
-    @BindView(R2.id.sb_tx_power)
-    SeekBar sbTxPower;
-    @BindView(R2.id.tv_tx_power_value)
-    TextView tvTxPowerValue;
-    @BindView(R2.id.cl_beacon_mode_open)
-    ConstraintLayout clBeaconModeOpen;
-    @BindView(R2.id.et_adv_timeout)
-    EditText etAdvTimeout;
-    @BindView(R2.id.cl_beacon_mode_close)
-    ConstraintLayout clBeaconModeClose;
-    @BindView(R2.id.cb_beacon_mode)
-    CheckBox cbBeaconMode;
+    private Lw007FragmentBleBinding mBind;
 
     //    private boolean mOfflineFixEnable;
     private DeviceInfoActivity activity;
@@ -72,10 +42,9 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        View view = inflater.inflate(R.layout.lw007_fragment_ble, container, false);
-        ButterKnife.bind(this, view);
+        mBind = Lw007FragmentBleBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
-        sbTxPower.setOnSeekBarChangeListener(this);
+        mBind.sbTxPower.setOnSeekBarChangeListener(this);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
@@ -83,74 +52,74 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
 
             return null;
         };
-        etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16), inputFilter});
-        cbBeaconMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        mBind.etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16), inputFilter});
+        mBind.cbBeaconMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                clBeaconModeOpen.setVisibility(View.VISIBLE);
-                clBeaconModeClose.setVisibility(View.GONE);
+                mBind.clBeaconModeOpen.setVisibility(View.VISIBLE);
+                mBind.clBeaconModeClose.setVisibility(View.GONE);
             } else {
-                clBeaconModeOpen.setVisibility(View.GONE);
-                clBeaconModeClose.setVisibility(View.VISIBLE);
+                mBind.clBeaconModeOpen.setVisibility(View.GONE);
+                mBind.clBeaconModeClose.setVisibility(View.VISIBLE);
             }
         });
-        return view;
+        return mBind.getRoot();
     }
 
 
     public void setBleEnable(int enable) {
-        cbBeaconMode.setChecked(enable == 1);
+        mBind.cbBeaconMode.setChecked(enable == 1);
         if (enable == 1) {
-            clBeaconModeOpen.setVisibility(View.VISIBLE);
-            clBeaconModeClose.setVisibility(View.GONE);
+            mBind.clBeaconModeOpen.setVisibility(View.VISIBLE);
+            mBind.clBeaconModeClose.setVisibility(View.GONE);
         } else {
-            clBeaconModeOpen.setVisibility(View.GONE);
-            clBeaconModeClose.setVisibility(View.VISIBLE);
+            mBind.clBeaconModeOpen.setVisibility(View.GONE);
+            mBind.clBeaconModeClose.setVisibility(View.VISIBLE);
         }
     }
 
     public void setBleAdvName(String advName) {
-        etAdvName.setText(advName);
+        mBind.etAdvName.setText(advName);
     }
 
     public void setBleAdvInterval(int advInterval) {
-        etAdvInterval.setText(String.valueOf(advInterval));
+        mBind.etAdvInterval.setText(String.valueOf(advInterval));
     }
 
     public void setBleTimeoutDuration(int timeout) {
-        etAdvTimeout.setText(String.valueOf(timeout));
+        mBind.etAdvTimeout.setText(String.valueOf(timeout));
     }
 
     private boolean isConnectable;
 
     public void setBleConnectable(int connectable) {
         isConnectable = connectable == 1;
-        ivConnectable.setImageResource(isConnectable ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.ivConnectable.setImageResource(isConnectable ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
     }
 
     private boolean isLoginMode;
 
     public void setBleLoginMode(int loginMode) {
         isLoginMode = loginMode == 1;
-        ivLoginMode.setImageResource(isLoginMode ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
-        tvChangePassword.setVisibility(isLoginMode ? View.VISIBLE : View.GONE);
+        mBind.ivLoginMode.setImageResource(isLoginMode ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.tvChangePassword.setVisibility(isLoginMode ? View.VISIBLE : View.GONE);
     }
 
     public void setBleTxPower(int txPower) {
         TxPowerEnum txPowerEnum = TxPowerEnum.fromTxPower(txPower);
         int progress = txPowerEnum.ordinal();
-        sbTxPower.setProgress(progress);
+        mBind.sbTxPower.setProgress(progress);
     }
 
 
     public void changeConnectable() {
         isConnectable = !isConnectable;
-        ivConnectable.setImageResource(isConnectable ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.ivConnectable.setImageResource(isConnectable ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
     }
 
     public void changeLoginMode() {
         isLoginMode = !isLoginMode;
-        ivLoginMode.setImageResource(isLoginMode ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
-        tvChangePassword.setVisibility(isLoginMode ? View.VISIBLE : View.GONE);
+        mBind.ivLoginMode.setImageResource(isLoginMode ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.tvChangePassword.setVisibility(isLoginMode ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -159,7 +128,7 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
         if (txPowerEnum == null)
             return;
         int txPower = txPowerEnum.getTxPower();
-        tvTxPowerValue.setText(String.format("%ddBm", txPower));
+        mBind.tvTxPowerValue.setText(String.format("%ddBm", txPower));
     }
 
     @Override
@@ -173,9 +142,9 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
     }
 
     public boolean isValid() {
-        final String advIntervalStr = etAdvInterval.getText().toString();
-        if (!cbBeaconMode.isChecked()) {
-            final String advTimeoutStr = etAdvTimeout.getText().toString();
+        final String advIntervalStr = mBind.etAdvInterval.getText().toString();
+        if (!mBind.cbBeaconMode.isChecked()) {
+            final String advTimeoutStr = mBind.etAdvTimeout.getText().toString();
             if (TextUtils.isEmpty(advTimeoutStr))
                 return false;
             final int timeout = Integer.parseInt(advTimeoutStr);
@@ -193,21 +162,21 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
     }
 
     public void saveParams() {
-        final String advNameStr = etAdvName.getText().toString();
-        final String advIntervalStr = etAdvInterval.getText().toString();
+        final String advNameStr = mBind.etAdvName.getText().toString();
+        final String advIntervalStr = mBind.etAdvInterval.getText().toString();
         final int interval = Integer.parseInt(advIntervalStr);
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setBleEnable(cbBeaconMode.isChecked() ? 1 : 0));
-        if (cbBeaconMode.isChecked()) {
+        orderTasks.add(OrderTaskAssembler.setBleEnable(mBind.cbBeaconMode.isChecked() ? 1 : 0));
+        if (mBind.cbBeaconMode.isChecked()) {
             orderTasks.add(OrderTaskAssembler.setBleConnectable(isConnectable ? 1 : 0));
         } else {
-            final String advTimeoutStr = etAdvTimeout.getText().toString();
+            final String advTimeoutStr = mBind.etAdvTimeout.getText().toString();
             final int timeout = Integer.parseInt(advTimeoutStr);
             orderTasks.add(OrderTaskAssembler.setBleTimeoutDuration(timeout));
         }
         orderTasks.add(OrderTaskAssembler.setBleAdvName(advNameStr));
         orderTasks.add(OrderTaskAssembler.setBleAdvInterval(interval));
-        int progress = sbTxPower.getProgress();
+        int progress = mBind.sbTxPower.getProgress();
         TxPowerEnum txPowerEnum = TxPowerEnum.fromOrdinal(progress);
         orderTasks.add(OrderTaskAssembler.setBleTxPower(txPowerEnum.getTxPower()));
         orderTasks.add(OrderTaskAssembler.setBleLoginMode(isLoginMode ? 1 : 0));

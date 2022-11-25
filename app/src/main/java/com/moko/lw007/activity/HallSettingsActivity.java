@@ -3,8 +3,6 @@ package com.moko.lw007.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -12,8 +10,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw007.R;
-import com.moko.lw007.R2;
+import com.moko.lw007.databinding.Lw007ActivityHallSettingsBinding;
 import com.moko.lw007.dialog.AlertMessageDialog;
 import com.moko.lw007.dialog.LoadingMessageDialog;
 import com.moko.lw007.utils.ToastUtils;
@@ -31,29 +28,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class HallSettingsActivity extends BaseActivity {
 
-
-    @BindView(R2.id.cb_hall_enable)
-    CheckBox cbHallEnable;
-    @BindView(R2.id.tv_hall_status)
-    TextView tvHallStatus;
-    @BindView(R2.id.tv_total_trigger_times)
-    TextView tvTotalTriggerTimes;
+    private Lw007ActivityHallSettingsBinding mBind;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw007_activity_hall_settings);
-        ButterKnife.bind(this);
+        mBind = Lw007ActivityHallSettingsBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         LoRaLW007MokoSupport.getInstance().enableHallStatusNotify();
         showSyncingProgressDialog();
-        tvHallStatus.postDelayed(() -> {
+        mBind.tvHallStatus.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getHallStatusEnable());
             orderTasks.add(OrderTaskAssembler.getHallStatusSum());
@@ -95,13 +83,13 @@ public class HallSettingsActivity extends BaseActivity {
                             int hallStatus = value[4] & 0xFF;
                             int triggerTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
                             if (hallStatus == 0xFF) {
-                                tvHallStatus.setVisibility(View.GONE);
-                                tvTotalTriggerTimes.setVisibility(View.GONE);
+                                mBind.tvHallStatus.setVisibility(View.GONE);
+                                mBind.tvTotalTriggerTimes.setVisibility(View.GONE);
                             } else {
-                                tvHallStatus.setVisibility(View.VISIBLE);
-                                tvTotalTriggerTimes.setVisibility(View.VISIBLE);
-                                tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
-                                tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
+                                mBind.tvHallStatus.setVisibility(View.VISIBLE);
+                                mBind.tvTotalTriggerTimes.setVisibility(View.VISIBLE);
+                                mBind.tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
+                                mBind.tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
                             }
                         }
                         break;
@@ -138,13 +126,13 @@ public class HallSettingsActivity extends BaseActivity {
                                             int hallStatus = value[4] & 0xFF;
                                             int triggerTimes = MokoUtils.toInt(Arrays.copyOfRange(value, 5, 7));
                                             if (hallStatus == 0xFF) {
-                                                tvHallStatus.setVisibility(View.GONE);
-                                                tvTotalTriggerTimes.setVisibility(View.GONE);
+                                                mBind.tvHallStatus.setVisibility(View.GONE);
+                                                mBind.tvTotalTriggerTimes.setVisibility(View.GONE);
                                             } else {
-                                                tvHallStatus.setVisibility(View.VISIBLE);
-                                                tvTotalTriggerTimes.setVisibility(View.VISIBLE);
-                                                tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
-                                                tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
+                                                mBind.tvHallStatus.setVisibility(View.VISIBLE);
+                                                mBind.tvTotalTriggerTimes.setVisibility(View.VISIBLE);
+                                                mBind.tvHallStatus.setText(hallStatus == 1 ? "Open" : "Closed");
+                                                mBind.tvTotalTriggerTimes.setText(String.valueOf(triggerTimes));
                                             }
                                         }
                                         break;
@@ -175,8 +163,8 @@ public class HallSettingsActivity extends BaseActivity {
                                         if (savedParamsError) {
                                             ToastUtils.showToast(HallSettingsActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
-                                            tvHallStatus.setVisibility(cbHallEnable.isChecked() ? View.VISIBLE : View.GONE);
-                                            tvTotalTriggerTimes.setVisibility(cbHallEnable.isChecked() ? View.VISIBLE : View.GONE);
+                                            mBind.tvHallStatus.setVisibility(mBind.cbHallEnable.isChecked() ? View.VISIBLE : View.GONE);
+                                            mBind.tvTotalTriggerTimes.setVisibility(mBind.cbHallEnable.isChecked() ? View.VISIBLE : View.GONE);
                                             AlertMessageDialog dialog = new AlertMessageDialog();
                                             dialog.setMessage("Saved Successfully！");
                                             dialog.setConfirm("OK");
@@ -192,9 +180,9 @@ public class HallSettingsActivity extends BaseActivity {
                                     case KEY_HALL_STATUS_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            tvHallStatus.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
-                                            tvTotalTriggerTimes.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
-                                            cbHallEnable.setChecked(enable == 1);
+                                            mBind.tvHallStatus.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
+                                            mBind.tvTotalTriggerTimes.setVisibility(enable == 0 ? View.GONE : View.VISIBLE);
+                                            mBind.cbHallEnable.setChecked(enable == 1);
                                         }
                                         break;
 
@@ -253,8 +241,8 @@ public class HallSettingsActivity extends BaseActivity {
     private void saveParams() {
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setHallStatusEnable(cbHallEnable.isChecked() ? 1 : 0));
-        if (cbHallEnable.isChecked()) {
+        orderTasks.add(OrderTaskAssembler.setHallStatusEnable(mBind.cbHallEnable.isChecked() ? 1 : 0));
+        if (mBind.cbHallEnable.isChecked()) {
             orderTasks.add(OrderTaskAssembler.getHallStatusSum());
         }
         LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

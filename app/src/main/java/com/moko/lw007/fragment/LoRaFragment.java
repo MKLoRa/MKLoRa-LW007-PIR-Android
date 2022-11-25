@@ -6,23 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.moko.lw007.R;
-import com.moko.lw007.R2;
 import com.moko.lw007.activity.DeviceInfoActivity;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.moko.lw007.databinding.Lw007FragmentLoraBinding;
 
 public class LoRaFragment extends Fragment {
     private static final String TAG = LoRaFragment.class.getSimpleName();
-    @BindView(R2.id.tv_lora_status)
-    TextView tvLoraStatus;
-    @BindView(R2.id.tv_lora_info)
-    TextView tvLoraInfo;
-
-
+    private Lw007FragmentLoraBinding mBind;
     private DeviceInfoActivity activity;
 
     public LoRaFragment() {
@@ -38,14 +28,13 @@ public class LoRaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        View view = inflater.inflate(R.layout.lw007_fragment_lora, container, false);
-        ButterKnife.bind(this, view);
+        mBind = Lw007FragmentLoraBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
-        return view;
+        return mBind.getRoot();
     }
 
     public void setLoRaInfo(String loraInfo) {
-        tvLoraInfo.setText(loraInfo);
+        mBind.tvLoraInfo.setText(loraInfo);
     }
 
     public void setLoraStatus(int networkCheck) {
@@ -58,6 +47,6 @@ public class LoRaFragment extends Fragment {
                 networkCheckDisPlay = "Connected";
                 break;
         }
-        tvLoraStatus.setText(networkCheckDisPlay);
+        mBind.tvLoraStatus.setText(networkCheckDisPlay);
     }
 }

@@ -105,8 +105,7 @@
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/lw007_black_333333"
-                    android:textSize="15sp"
-                    android:visibility="visible"
+                    android:textSize="13sp"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -119,12 +118,11 @@
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/lw007_black_333333"
-                    android:textSize="15sp"
-                    android:visibility="visible"
-                    app:layout_constraintHorizontal_bias="0.3"
+                    android:textSize="13sp"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/battery_info" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_runtime" />
 
                 <TextView
                     android:id="@+id/tv_th_sample_rate"
@@ -133,12 +131,11 @@
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/lw007_black_333333"
-                    android:textSize="15sp"
-                    android:visibility="visible"
-                    app:layout_constraintHorizontal_bias="0.6"
+                    android:textSize="13sp"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/battery_info" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_adv_times" />
 
                 <TextView
                     android:id="@+id/tv_lora_power"
@@ -147,12 +144,11 @@
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/lw007_black_333333"
-                    android:textSize="15sp"
-                    android:visibility="visible"
+                    android:textSize="13sp"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_runtime" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_th_sample_rate" />
 
                 <TextView
                     android:id="@+id/tv_lora_transmission_times"
@@ -161,12 +157,11 @@
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/lw007_black_333333"
-                    android:textSize="15sp"
-                    android:visibility="visible"
-                    app:layout_constraintHorizontal_bias="0.3"
+                    android:textSize="13sp"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_runtime" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_lora_power" />
 
                 <TextView
                     android:id="@+id/tv_battery_consume"
@@ -175,12 +170,11 @@
                     android:gravity="center_vertical"
                     android:text=""
                     android:textColor="@color/lw007_black_333333"
-                    android:textSize="15sp"
-                    android:visibility="visible"
+                    android:textSize="13sp"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_lora_power" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_lora_transmission_times" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
