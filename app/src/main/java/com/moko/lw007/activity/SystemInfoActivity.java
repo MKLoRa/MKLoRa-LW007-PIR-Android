@@ -14,7 +14,6 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
@@ -70,15 +69,17 @@ public class SystemInfoActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.getMacAddress());
-        orderTasks.add(OrderTaskAssembler.getDeviceModel());
+        mBind.tvBack.postDelayed(() -> {
+            List<OrderTask> orderTasks = new ArrayList<>();
+            orderTasks.add(OrderTaskAssembler.getMacAddress());
+            orderTasks.add(OrderTaskAssembler.getDeviceModel());
 //        orderTasks.add(OrderTaskAssembler.getBattery());
-        orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
-        orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
-        orderTasks.add(OrderTaskAssembler.getHardwareVersion());
-        orderTasks.add(OrderTaskAssembler.getManufacturer());
-        LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+            orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
+            orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
+            orderTasks.add(OrderTaskAssembler.getHardwareVersion());
+            orderTasks.add(OrderTaskAssembler.getManufacturer());
+            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        }, 500);
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -88,7 +89,9 @@ public class SystemInfoActivity extends BaseActivity {
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
                 if (!isUpgrade) {
-                    setResult(RESULT_FIRST_USER);
+                    Intent intent = new Intent();
+                    intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+                    setResult(RESULT_FIRST_USER, intent);
                     finish();
                 }
             }
@@ -285,7 +288,9 @@ public class SystemInfoActivity extends BaseActivity {
         if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
             mDFUDialog.dismiss();
         }
-        setResult(RESULT_FIRST_USER);
+        Intent intent = new Intent();
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+        setResult(RESULT_FIRST_USER, intent);
         finish();
     }
 
@@ -310,7 +315,7 @@ public class SystemInfoActivity extends BaseActivity {
             XLog.w("onDeviceConnecting...");
             mDeviceConnectCount++;
             if (mDeviceConnectCount > 3) {
-                Toast.makeText(SystemInfoActivity.this, "Error:DFU Failed", Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(SystemInfoActivity.this, "Error:DFU Failed");
                 dismissDFUProgressDialog();
                 final LocalBroadcastManager manager = LocalBroadcastManager.getInstance(SystemInfoActivity.this);
                 final Intent abortAction = new Intent(DfuService.BROADCAST_ACTION);
@@ -374,24 +379,22 @@ public class SystemInfoActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_FIRMWARE) {
-            if (resultCode == RESULT_OK) {
-                //得到uri，后面就是将uri转化成file的过程。
-                Uri uri = data.getData();
-                String firmwareFilePath = FileUtils.getPath(this, uri);
-                if (TextUtils.isEmpty(firmwareFilePath))
-                    return;
-                final File firmwareFile = new File(firmwareFilePath);
-                if (firmwareFile.exists()) {
-                    final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
-                            .setKeepBond(false)
-                            .setDisableNotification(true);
-                    starter.setZip(null, firmwareFilePath);
-                    starter.start(this, DfuService.class);
-                    showDFUProgressDialog("Waiting...");
-                } else {
-                    Toast.makeText(this, "file is not exists!", Toast.LENGTH_SHORT).show();
-                }
+            //得到uri，后面就是将uri转化成file的过程。
+            Uri uri = data.getData();
+            String firmwareFilePath = FileUtils.getPath(this, uri);
+            if (TextUtils.isEmpty(firmwareFilePath))
+                return;
+            final File firmwareFile = new File(firmwareFilePath);
+            if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
+                ToastUtils.showToast(this, "File error!");
+                return;
             }
+            final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
+                    .setKeepBond(false)
+                    .setDisableNotification(true);
+            starter.setZip(null, firmwareFilePath);
+            starter.start(this, DfuService.class);
+            showDFUProgressDialog("Waiting...");
         }
     }
 

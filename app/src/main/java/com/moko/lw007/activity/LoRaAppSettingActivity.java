@@ -49,10 +49,12 @@ public class LoRaAppSettingActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.getLoraTimeSyncInterval());
-        orderTasks.add(OrderTaskAssembler.getLoraNetworkCheckInterval());
-        LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        mBind.tvTitle.postDelayed(() -> {
+            List<OrderTask> orderTasks = new ArrayList<>();
+            orderTasks.add(OrderTaskAssembler.getLoraTimeSyncInterval());
+            orderTasks.add(OrderTaskAssembler.getLoraNetworkCheckInterval());
+            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        },500);
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)

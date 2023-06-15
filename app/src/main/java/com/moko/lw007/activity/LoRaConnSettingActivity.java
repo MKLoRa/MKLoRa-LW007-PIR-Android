@@ -94,22 +94,24 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             LoRaLW007MokoSupport.getInstance().enableBluetooth();
         } else {
             showSyncingProgressDialog();
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
-            orderTasks.add(OrderTaskAssembler.getLoraDevEUI());
-            orderTasks.add(OrderTaskAssembler.getLoraAppEUI());
-            orderTasks.add(OrderTaskAssembler.getLoraAppKey());
-            orderTasks.add(OrderTaskAssembler.getLoraDevAddr());
-            orderTasks.add(OrderTaskAssembler.getLoraAppSKey());
-            orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
-            orderTasks.add(OrderTaskAssembler.getLoraRegion());
-            orderTasks.add(OrderTaskAssembler.getLoraMessageType());
-            orderTasks.add(OrderTaskAssembler.getLoraCH());
-            orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
-            orderTasks.add(OrderTaskAssembler.getLoraDR());
-            orderTasks.add(OrderTaskAssembler.getLoraMaxRetransmissionTimes());
-            orderTasks.add(OrderTaskAssembler.getLoraUplinkStrategy());
-            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+            mBind.tvTitle.postDelayed(() -> {
+                List<OrderTask> orderTasks = new ArrayList<>();
+                orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
+                orderTasks.add(OrderTaskAssembler.getLoraDevEUI());
+                orderTasks.add(OrderTaskAssembler.getLoraAppEUI());
+                orderTasks.add(OrderTaskAssembler.getLoraAppKey());
+                orderTasks.add(OrderTaskAssembler.getLoraDevAddr());
+                orderTasks.add(OrderTaskAssembler.getLoraAppSKey());
+                orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
+                orderTasks.add(OrderTaskAssembler.getLoraRegion());
+                orderTasks.add(OrderTaskAssembler.getLoraMessageType());
+                orderTasks.add(OrderTaskAssembler.getLoraCH());
+                orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
+                orderTasks.add(OrderTaskAssembler.getLoraDR());
+                orderTasks.add(OrderTaskAssembler.getLoraMaxRetransmissionTimes());
+                orderTasks.add(OrderTaskAssembler.getLoraUplinkStrategy());
+                LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+            }, 500);
         }
     }
 
@@ -551,7 +553,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             // AS923,US915,AU915
             mBind.rlDr.setVisibility(View.GONE);
         } else {
-            mBind. rlDr.setVisibility(View.VISIBLE);
+            mBind.rlDr.setVisibility(View.VISIBLE);
         }
     }
 
