@@ -295,7 +295,7 @@ We used the Nordic DFU for the OTA,dependencies have been added to build.gradle.
 
 ```
 dependencies {
-    api 'no.nordicsemi.android:dfu:0.6.2'
+    api 'no.nordicsemi.android:dfu:2.3.0'
 }
 ```
 

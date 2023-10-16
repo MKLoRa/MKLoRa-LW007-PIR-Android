@@ -379,22 +379,26 @@ public class SystemInfoActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_FIRMWARE) {
-            //得到uri，后面就是将uri转化成file的过程。
-            Uri uri = data.getData();
-            String firmwareFilePath = FileUtils.getPath(this, uri);
-            if (TextUtils.isEmpty(firmwareFilePath))
-                return;
-            final File firmwareFile = new File(firmwareFilePath);
-            if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
-                ToastUtils.showToast(this, "File error!");
-                return;
+            if (resultCode == RESULT_OK) {
+                //得到uri，后面就是将uri转化成file的过程。
+                Uri uri = data.getData();
+                String firmwareFilePath = FileUtils.getPath(this, uri);
+                if (TextUtils.isEmpty(firmwareFilePath))
+                    return;
+                final File firmwareFile = new File(firmwareFilePath);
+                if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
+                    ToastUtils.showToast(this, "File error!");
+                    return;
+                }
+                final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
+                        .setKeepBond(false)
+                        .setForeground(false)
+                        .setMtu(23)
+                        .setDisableNotification(true);
+                starter.setZip(null, firmwareFilePath);
+                starter.start(this, DfuService.class);
+                showDFUProgressDialog("Waiting...");
             }
-            final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
-                    .setKeepBond(false)
-                    .setDisableNotification(true);
-            starter.setZip(null, firmwareFilePath);
-            starter.start(this, DfuService.class);
-            showDFUProgressDialog("Waiting...");
         }
     }
 
