@@ -91,6 +91,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         mRegions.add("IN865");
         mRegions.add("US915");
         mRegions.add("RU864");
+        mRegions.add("AS923-1");
+        mRegions.add("AS923-2");
+        mRegions.add("AS923-3");
+        mRegions.add("AS923-4");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);

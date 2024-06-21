@@ -75,6 +75,10 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         mRegionsList.add("IN865");
         mRegionsList.add("US915");
         mRegionsList.add("RU864");
+        mRegionsList.add("AS923-1");
+        mRegionsList.add("AS923-2");
+        mRegionsList.add("AS923-3");
+        mRegionsList.add("AS923-4");
         mMessageTypeList = new ArrayList<>();
         mMessageTypeList.add("Unconfirmed");
         mMessageTypeList.add("Confirmed");
@@ -129,15 +133,12 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
         final String action = event.getAction();
         runOnUiThread(() -> {
-            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
-            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
-                int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_CONTROL:
@@ -145,27 +146,21 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                             int header = value[0] & 0xFF;// 0xED
                             int flag = value[1] & 0xFF;// read or write
                             int cmd = value[2] & 0xFF;
-                            if (header != 0xED)
-                                return;
+                            if (header != 0xED) return;
                             ControlKeyEnum configKeyEnum = ControlKeyEnum.fromParamKey(cmd);
-                            if (configKeyEnum == null) {
-                                return;
-                            }
-                            int length = value[3] & 0xFF;
+                            if (configKeyEnum == null) return;
                             if (flag == 0x01) {
                                 // write
                                 int result = value[4] & 0xFF;
-                                switch (configKeyEnum) {
-                                    case KEY_RESTART:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
-                                        if (savedParamsError) {
-                                            ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                        } else {
-                                            ToastUtils.showToast(this, "Saved Successfully！");
-                                        }
-                                        break;
+                                if (configKeyEnum == ControlKeyEnum.KEY_RESTART) {
+                                    if (result != 1) {
+                                        savedParamsError = true;
+                                    }
+                                    if (savedParamsError) {
+                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
+                                    } else {
+                                        ToastUtils.showToast(this, "Saved Successfully！");
+                                    }
                                 }
                             }
                         }
@@ -338,7 +333,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         });
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -346,11 +341,9 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 String action = intent.getAction();
                 if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
                     int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    switch (blueState) {
-                        case BluetoothAdapter.STATE_TURNING_OFF:
-                            dismissSyncProgressDialog();
-                            finish();
-                            break;
+                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
+                        dismissSyncProgressDialog();
+                        finish();
                     }
                 }
             }
@@ -474,13 +467,18 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 break;
             case 0:
             case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
                 // AS923、RU864
                 mSelectedCh1 = 0;
                 mSelectedCh2 = 1;
                 mSelectedDr = 0;
                 break;
         }
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 ||mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             mSelectedDr1 = 2;
             mSelectedDr2 = 2;
         } else {
@@ -527,6 +525,10 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 break;
             case 0:
             case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
                 // AS923、RU864
                 mMaxCH = 1;
                 mMaxDR = 5;
@@ -536,14 +538,16 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             mCHList.add(String.valueOf(i));
         }
         int minDR = 0;
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 ||mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             // AS923,AU915
             minDR = 2;
         }
         for (int i = minDR; i <= mMaxDR; i++) {
             mDRList.add(String.valueOf(i));
         }
-        if (mSelectedRegion == 1 || mSelectedRegion == 2 || mSelectedRegion == 8) {
+        if (mSelectedRegion == 1 || mSelectedRegion == 2 || mSelectedRegion == 8 ||mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             // US915,AU915,CN470
             mBind.rlCh.setVisibility(View.VISIBLE);
         } else {
@@ -604,8 +608,9 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     public void selectDr1(View view) {
         if (isWindowLocked())
             return;
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
-            BottomDialog bottomDialog = new BottomDialog();
+        BottomDialog bottomDialog = new BottomDialog();
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 ||mSelectedRegion == 10 ||
+                mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             bottomDialog.setDatas(mDRList, mSelectedDr1 - 2);
             bottomDialog.setListener(value -> {
                 mSelectedDr1 = value + 2;
@@ -615,9 +620,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                     mBind.tvDr2.setText(mDRList.get(value));
                 }
             });
-            bottomDialog.show(getSupportFragmentManager());
         } else {
-            BottomDialog bottomDialog = new BottomDialog();
             bottomDialog.setDatas(mDRList, mSelectedDr1);
             bottomDialog.setListener(value -> {
                 mSelectedDr1 = value;
@@ -627,8 +630,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                     mBind.tvDr2.setText(mDRList.get(value));
                 }
             });
-            bottomDialog.show(getSupportFragmentManager());
         }
+        bottomDialog.show(getSupportFragmentManager());
     }
 
     public void selectDr2(View view) {
@@ -672,8 +675,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     }
 
     public void onSave(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         ArrayList<OrderTask> orderTasks = new ArrayList<>();
         if (mSelectedMode == 0) {
             String devEui = mBind.etDevEui.getText().toString();
@@ -743,13 +745,14 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             // CN779,EU433,EU868 and RU864
             orderTasks.add(OrderTaskAssembler.setLoraDutyCycleEnable(mBind.cbDutyCycle.isChecked() ? 1 : 0));
         }
-        if (mSelectedRegion != 0 && mSelectedRegion != 1 && mSelectedRegion != 8) {
+        if (mSelectedRegion == 2 || mSelectedRegion == 3 || mSelectedRegion == 4 || mSelectedRegion == 5
+                || mSelectedRegion == 6 || mSelectedRegion == 7 || mSelectedRegion == 9) {
             // AS923,US915,AU915
             orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr));
         }
         orderTasks.add(OrderTaskAssembler.setLoraUplinkStrategy(mBind.cbAdr.isChecked() ? 1 : 0, mSelectedDr1, mSelectedDr2));
-        LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         showSyncingProgressDialog();
+        LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
     @Override

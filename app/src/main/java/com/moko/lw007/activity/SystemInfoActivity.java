@@ -248,10 +248,8 @@ public class SystemInfoActivity extends BaseActivity {
     }
 
     public void onUpdateFirmware(View view) {
-        if (isWindowLocked())
-            return;
-        if (TextUtils.isEmpty(mDeviceMac))
-            return;
+        if (isWindowLocked()) return;
+        if (TextUtils.isEmpty(mDeviceMac)) return;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setMessage("Please disconnect the load device before DFU, otherwise there may be security risks.");
         dialog.setConfirm("OK");
@@ -393,7 +391,7 @@ public class SystemInfoActivity extends BaseActivity {
                 final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
                         .setKeepBond(false)
                         .setForeground(false)
-                        .setMtu(23)
+                        .disableMtuRequest()
                         .setDisableNotification(true);
                 starter.setZip(null, firmwareFilePath);
                 starter.start(this, DfuService.class);

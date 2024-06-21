@@ -19,7 +19,7 @@ public class ParamsWriteTask extends OrderTask {
         return data;
     }
 
-    public void setLoraRegion(@IntRange(from = 0, to = 9) int region) {
+    public void setLoraRegion(@IntRange(from = 0, to = 13) int region) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
