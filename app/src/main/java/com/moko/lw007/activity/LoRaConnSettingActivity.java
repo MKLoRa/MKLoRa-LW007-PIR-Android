@@ -6,19 +6,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lw007.AppConstants;
 import com.moko.lw007.R;
 import com.moko.lw007.databinding.Lw007ActivityConnSettingBinding;
 import com.moko.lw007.dialog.BottomDialog;
 import com.moko.lw007.dialog.LoadingMessageDialog;
+import com.moko.lw007.dialog.LoginDialog;
+import com.moko.lw007.dialog.LogoutDialog;
+import com.moko.lw007.net.Urls;
+import com.moko.lw007.net.entity.CommonResp;
+import com.moko.lw007.net.entity.LoginEntity;
+import com.moko.lw007.utils.SPUtiles;
 import com.moko.lw007.utils.ToastUtils;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
@@ -30,22 +46,29 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import okhttp3.RequestBody;
+
 public class LoRaConnSettingActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
-
-
     private Lw007ActivityConnSettingBinding mBind;
+
     private boolean mReceiverTag = false;
     private ArrayList<String> mModeList;
     private ArrayList<String> mRegionsList;
     private ArrayList<String> mMessageTypeList;
     private ArrayList<String> mMaxRetransmissionTimesList;
+    private ArrayList<String> mServerRegionsList;
+    private ArrayList<String> mServerPlatformList;
     private int mSelectedMode;
     private int mSelectedRegion;
     private int mSelectedMessageType;
+    private int mSelectedServerRegion;
+    private int mSelectedPlatform;
     private int mSelectedCh1;
     private int mSelectedCh2;
     private int mSelectedDr;
@@ -56,6 +79,13 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     private int mMaxDR;
     private boolean savedParamsError;
 
+    private String mRemoteDevEUI = "";
+    private String mRemoteAPPEUI = "70b3d57ed0026b87";
+    private String mRemoteAPPKEY = "";
+
+    private String[] mRegionsArray = {"AS923", "AU915", "CN470", "CN779", "EU433", "EU868", "KR920", "IN865", "US915", "RU864", "AS923-1", "AS923-2", "AS923-3", "AS923-4"};
+    private String[] mServerRegionsArray = {"AS923", "EU868", "US915 FSB1", "US915 FSB2", "AU915 FSB1", "AU915 FSB2"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,21 +94,16 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         mModeList = new ArrayList<>();
         mModeList.add("ABP");
         mModeList.add("OTAA");
-        mRegionsList = new ArrayList<>();
-        mRegionsList.add("AS923");
-        mRegionsList.add("AU915");
-        mRegionsList.add("CN470");
-        mRegionsList.add("CN779");
-        mRegionsList.add("EU433");
-        mRegionsList.add("EU868");
-        mRegionsList.add("KR920");
-        mRegionsList.add("IN865");
-        mRegionsList.add("US915");
-        mRegionsList.add("RU864");
-        mRegionsList.add("AS923-1");
-        mRegionsList.add("AS923-2");
-        mRegionsList.add("AS923-3");
-        mRegionsList.add("AS923-4");
+
+        mServerPlatformList = new ArrayList<>();
+        mServerPlatformList.add("Third Party NS");
+        mServerPlatformList.add("MOKO IoT DM");
+        mSelectedPlatform = 0;
+
+        mRegionsList = new ArrayList<>(Arrays.asList(mRegionsArray));
+        mServerRegionsList = new ArrayList<>(Arrays.asList(mServerRegionsArray));
+        mSelectedServerRegion = 1;
+        mSelectedRegion = 5;
         mMessageTypeList = new ArrayList<>();
         mMessageTypeList.add("Unconfirmed");
         mMessageTypeList.add("Confirmed");
@@ -98,24 +123,23 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             LoRaLW007MokoSupport.getInstance().enableBluetooth();
         } else {
             showSyncingProgressDialog();
-            mBind.tvTitle.postDelayed(() -> {
-                List<OrderTask> orderTasks = new ArrayList<>();
-                orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
-                orderTasks.add(OrderTaskAssembler.getLoraDevEUI());
-                orderTasks.add(OrderTaskAssembler.getLoraAppEUI());
-                orderTasks.add(OrderTaskAssembler.getLoraAppKey());
-                orderTasks.add(OrderTaskAssembler.getLoraDevAddr());
-                orderTasks.add(OrderTaskAssembler.getLoraAppSKey());
-                orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
-                orderTasks.add(OrderTaskAssembler.getLoraRegion());
-                orderTasks.add(OrderTaskAssembler.getLoraMessageType());
-                orderTasks.add(OrderTaskAssembler.getLoraCH());
-                orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
-                orderTasks.add(OrderTaskAssembler.getLoraDR());
-                orderTasks.add(OrderTaskAssembler.getLoraMaxRetransmissionTimes());
-                orderTasks.add(OrderTaskAssembler.getLoraUplinkStrategy());
-                LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-            }, 500);
+            List<OrderTask> orderTasks = new ArrayList<>();
+            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
+            orderTasks.add(OrderTaskAssembler.getMacAddress());
+            orderTasks.add(OrderTaskAssembler.getLoraDevEUI());
+            orderTasks.add(OrderTaskAssembler.getLoraAppEUI());
+            orderTasks.add(OrderTaskAssembler.getLoraAppKey());
+            orderTasks.add(OrderTaskAssembler.getLoraDevAddr());
+            orderTasks.add(OrderTaskAssembler.getLoraAppSKey());
+            orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
+            orderTasks.add(OrderTaskAssembler.getLoraRegion());
+            orderTasks.add(OrderTaskAssembler.getLoraMessageType());
+            orderTasks.add(OrderTaskAssembler.getLoraCH());
+            orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
+            orderTasks.add(OrderTaskAssembler.getLoraDR());
+            orderTasks.add(OrderTaskAssembler.getLoraMaxRetransmissionTimes());
+            orderTasks.add(OrderTaskAssembler.getLoraUplinkStrategy());
+            LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
     }
 
@@ -133,12 +157,15 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
         final String action = event.getAction();
         runOnUiThread(() -> {
+            if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
+            }
             if (MokoConstants.ACTION_ORDER_FINISH.equals(action)) {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
+                int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_CONTROL:
@@ -149,18 +176,34 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                             if (header != 0xED) return;
                             ControlKeyEnum configKeyEnum = ControlKeyEnum.fromParamKey(cmd);
                             if (configKeyEnum == null) return;
+                            int length = value[3] & 0xFF;
+                            if (flag == 0x00) {
+                                // read
+                                switch (configKeyEnum) {
+                                    case KEY_MAC:
+                                        if (length > 0) {
+                                            byte[] macBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            String mac = MokoUtils.bytesToHexString(macBytes);
+                                            mRemoteDevEUI = String.format("%sffff%s", mac.substring(0, 6), mac.substring(6, 12));
+                                            mRemoteAPPKEY = String.format("2b7e151628aed2a6abf7%s", mac);
+                                        }
+                                        break;
+                                }
+                            }
                             if (flag == 0x01) {
                                 // write
                                 int result = value[4] & 0xFF;
-                                if (configKeyEnum == ControlKeyEnum.KEY_RESTART) {
-                                    if (result != 1) {
-                                        savedParamsError = true;
-                                    }
-                                    if (savedParamsError) {
-                                        ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-                                    } else {
-                                        ToastUtils.showToast(this, "Saved Successfully！");
-                                    }
+                                switch (configKeyEnum) {
+                                    case KEY_RESTART:
+                                        if (result != 1) {
+                                            savedParamsError = true;
+                                        }
+                                        if (savedParamsError) {
+                                            ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
+                                        } else {
+                                            ToastUtils.showToast(this, "Saved Successfully！");
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -203,7 +246,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                             savedParamsError = true;
                                         }
                                         if (savedParamsError) {
-                                            ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
+                                            ToastUtils.showToast(LoRaConnSettingActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             showSyncingProgressDialog();
                                             LoRaLW007MokoSupport.getInstance().sendOrder(OrderTaskAssembler.restart());
@@ -333,7 +376,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         });
     }
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -341,9 +384,11 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 String action = intent.getAction();
                 if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
                     int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    if (blueState == BluetoothAdapter.STATE_TURNING_OFF) {
-                        dismissSyncProgressDialog();
-                        finish();
+                    switch (blueState) {
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                            dismissSyncProgressDialog();
+                            finish();
+                            break;
                     }
                 }
             }
@@ -358,10 +403,11 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             // 注销广播
             unregisterReceiver(mReceiver);
         }
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
-    public void back(View view) {
+    public void onBack(View view) {
         backHome();
     }
 
@@ -371,6 +417,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
     }
 
     private void backHome() {
+        EventBus.getDefault().unregister(this);
         setResult(RESULT_OK);
         finish();
     }
@@ -426,6 +473,96 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         bottomDialog.show(getSupportFragmentManager());
     }
 
+    public void selectServerRegion(View view) {
+        if (isWindowLocked()) return;
+        BottomDialog bottomDialog = new BottomDialog();
+        bottomDialog.setDatas(mServerRegionsList, mSelectedServerRegion);
+        bottomDialog.setListener(value -> {
+            if (mSelectedServerRegion != value) {
+                mBind.cbAdr.setChecked(true);
+                mSelectedServerRegion = value;
+                mBind.tvServerRegion.setText(mServerRegionsList.get(value));
+                initCHDRRange();
+                updateCHDR();
+                initDutyCycle();
+            }
+        });
+        bottomDialog.show(getSupportFragmentManager());
+    }
+
+    public void selectServerPlatform(View view) {
+        if (isWindowLocked()) return;
+        BottomDialog bottomDialog = new BottomDialog();
+        bottomDialog.setDatas(mServerPlatformList, mSelectedPlatform);
+        bottomDialog.setListener(value -> {
+            mSelectedPlatform = value;
+            mBind.tvServerPlatform.setText(mServerPlatformList.get(value));
+            if (mSelectedPlatform == 0) {
+                mBind.llModemParams.setVisibility(View.VISIBLE);
+                mBind.llGatewayId.setVisibility(View.GONE);
+                mBind.tvDevEUI.setVisibility(View.GONE);
+                mBind.rlCh.setVisibility(View.GONE);
+                mBind.rlRegion.setVisibility(View.VISIBLE);
+                mBind.rlServerRegion.setVisibility(View.GONE);
+                initCHDRRange();
+                updateCHDR();
+                initDutyCycle();
+            } else {
+                // MK IoT DM
+                mBind.llModemParams.setVisibility(View.GONE);
+                mBind.llGatewayId.setVisibility(View.VISIBLE);
+                mBind.tvDevEUI.setVisibility(View.VISIBLE);
+                mBind.rlRegion.setVisibility(View.GONE);
+                mBind.rlServerRegion.setVisibility(View.VISIBLE);
+                mSelectedDr = 0;
+                if (mSelectedServerRegion == 2 || mSelectedServerRegion == 4) {
+                    mSelectedCh1 = 0;
+                    mSelectedCh2 = 7;
+                } else if (mSelectedServerRegion == 3 || mSelectedServerRegion == 5) {
+                    mSelectedCh1 = 8;
+                    mSelectedCh2 = 15;
+                }
+                if (mSelectedServerRegion == 0 || mSelectedServerRegion > 1) {
+                    // AS923,US915,AU915
+                    mBind.rlDr.setVisibility(View.GONE);
+                } else {
+                    mBind.rlDr.setVisibility(View.VISIBLE);
+                }
+                if (mSelectedServerRegion == 0 || mSelectedServerRegion == 1 || mSelectedServerRegion == 4 ||
+                        mSelectedServerRegion == 5) {
+                    mSelectedDr1 = 2;
+                    mSelectedDr2 = 2;
+                } else {
+                    mSelectedDr1 = 0;
+                    mSelectedDr2 = 0;
+                }
+                if (mSelectedServerRegion == 1) {
+                    // EU868
+                    mBind.cbDutyCycle.setChecked(false);
+                    mBind.llDutyCycle.setVisibility(View.VISIBLE);
+                } else {
+                    mBind.llDutyCycle.setVisibility(View.GONE);
+                }
+                mBind.tvDr.setText(String.valueOf(mSelectedDr));
+                mBind.tvDr1.setText(String.valueOf(mSelectedDr1));
+                mBind.tvDr2.setText(String.valueOf(mSelectedDr2));
+                mBind.tvDevEUI.setText(String.format("DevEUI:%s", mRemoteDevEUI.toUpperCase()));
+                mAccount = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_ACCOUNT, "");
+                mPassword = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_PASSWORD, "");
+                if (TextUtils.isEmpty(mAccount))
+                    mBind.llAccount.setVisibility(View.GONE);
+                else
+                    mBind.tvAccount.setText(String.format("Account:%s", mAccount));
+                if (TextUtils.isEmpty(mPassword))
+                    mBind.llAccount.setVisibility(View.GONE);
+                else
+                    mBind.llAccount.setVisibility(View.VISIBLE);
+            }
+        });
+        bottomDialog.show(getSupportFragmentManager());
+    }
+
+
     private void updateCHDR() {
         switch (mSelectedRegion) {
             case 1:
@@ -440,7 +577,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             case 5:
             case 6:
             case 7:
-                // CN779、EU433、EU868、KR920、IN865
+                // CN779、EU443、EU868、KR920、IN865
                 mSelectedCh1 = 0;
                 mSelectedCh2 = 2;
                 mSelectedDr = 0;
@@ -463,7 +600,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                 mSelectedDr = 0;
                 break;
         }
-        if (mSelectedRegion == 0 || mSelectedRegion == 1 ||mSelectedRegion == 10 ||
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 10 ||
                 mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             mSelectedDr1 = 2;
             mSelectedDr2 = 2;
@@ -490,7 +627,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             case 5:
             case 6:
             case 7:
-                // CN779、EU433、EU868、KR920、IN865
+                // CN779、EU443、EU868、KR920、IN865
                 mMaxCH = 2;
                 mMaxDR = 5;
                 break;
@@ -524,7 +661,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             mCHList.add(String.valueOf(i));
         }
         int minDR = 0;
-        if (mSelectedRegion == 0 || mSelectedRegion == 1 ||mSelectedRegion == 10 ||
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 10 ||
                 mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             // AS923,AU915
             minDR = 2;
@@ -532,7 +669,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         for (int i = minDR; i <= mMaxDR; i++) {
             mDRList.add(String.valueOf(i));
         }
-        if (mSelectedRegion == 1 || mSelectedRegion == 2 || mSelectedRegion == 8 ||mSelectedRegion == 10 ||
+        if (mSelectedRegion == 1 || mSelectedRegion == 2 || mSelectedRegion == 8 || mSelectedRegion == 10 ||
                 mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             // US915,AU915,CN470
             mBind.rlCh.setVisibility(View.VISIBLE);
@@ -595,7 +732,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         if (isWindowLocked())
             return;
         BottomDialog bottomDialog = new BottomDialog();
-        if (mSelectedRegion == 0 || mSelectedRegion == 1 ||mSelectedRegion == 10 ||
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 10 ||
                 mSelectedRegion == 11 || mSelectedRegion == 12 || mSelectedRegion == 13) {
             bottomDialog.setDatas(mDRList, mSelectedDr1 - 2);
             bottomDialog.setListener(value -> {
@@ -660,85 +797,157 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         bottomDialog.show(getSupportFragmentManager());
     }
 
+    private ArrayList<OrderTask> mOrderTasks;
+
     public void onSave(View view) {
         if (isWindowLocked()) return;
-        ArrayList<OrderTask> orderTasks = new ArrayList<>();
-        if (mSelectedMode == 0) {
-            String devEui = mBind.etDevEui.getText().toString();
-            String appEui = mBind.etAppEui.getText().toString();
-            String devAddr = mBind.etDevAddr.getText().toString();
-            String appSkey = mBind.etAppSkey.getText().toString();
-            String nwkSkey = mBind.etNwkSkey.getText().toString();
-            if (devEui.length() != 16) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            if (appEui.length() != 16) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            if (devAddr.length() != 8) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            if (appSkey.length() != 32) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            if (nwkSkey.length() != 32) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
-            orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
-            orderTasks.add(OrderTaskAssembler.setLoraDevAddr(devAddr));
-            orderTasks.add(OrderTaskAssembler.setLoraAppSKey(appSkey));
-            orderTasks.add(OrderTaskAssembler.setLoraNwkSKey(nwkSkey));
-        } else {
-            String devEui = mBind.etDevEui.getText().toString();
-            String appEui = mBind.etAppEui.getText().toString();
-            String appKey = mBind.etAppKey.getText().toString();
-            if (devEui.length() != 16) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            if (appEui.length() != 16) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            if (appKey.length() != 32) {
-                ToastUtils.showToast(this, "data length error");
-                return;
-            }
-            orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
-            orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
-            orderTasks.add(OrderTaskAssembler.setLoraAppKey(appKey));
+        mOrderTasks = getOrderTasks();
+        if (mOrderTasks == null) {
+            ToastUtils.showToast(this, "Para error!");
+            return;
         }
-        orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
-        orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
-        if (mSelectedMessageType == 1) {
-            orderTasks.add(OrderTaskAssembler.setMaxRetransmissionTimes(mSelectedMaxRetransmissionTimes + 1));
+        if (mSelectedPlatform == 1) {
+            loginServer();
+            return;
         }
-        savedParamsError = false;
-        // 保存并连接
-        orderTasks.add(OrderTaskAssembler.setLoraRegion(mSelectedRegion));
-        if (mSelectedRegion == 1 || mSelectedRegion == 2 || mSelectedRegion == 8) {
-            // US915,AU915,CN470
-            orderTasks.add(OrderTaskAssembler.setLoraCH(mSelectedCh1, mSelectedCh2));
-        }
-        if (mSelectedRegion == 3 || mSelectedRegion == 4
-                || mSelectedRegion == 5 || mSelectedRegion == 9) {
-            // CN779,EU433,EU868 and RU864
-            orderTasks.add(OrderTaskAssembler.setLoraDutyCycleEnable(mBind.cbDutyCycle.isChecked() ? 1 : 0));
-        }
-        if (mSelectedRegion == 2 || mSelectedRegion == 3 || mSelectedRegion == 4 || mSelectedRegion == 5
-                || mSelectedRegion == 6 || mSelectedRegion == 7 || mSelectedRegion == 9) {
-            // AS923,US915,AU915
-            orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr));
-        }
-        orderTasks.add(OrderTaskAssembler.setLoraUplinkStrategy(mBind.cbAdr.isChecked() ? 1 : 0, mSelectedDr1, mSelectedDr2));
         showSyncingProgressDialog();
-        LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        LoRaLW007MokoSupport.getInstance().sendOrder(mOrderTasks.toArray(new OrderTask[]{}));
+    }
+
+    public void onLogout(View view) {
+        if (isWindowLocked()) return;
+        LogoutDialog dialog = new LogoutDialog();
+        dialog.setOnLogoutClicked(() -> {
+            mPassword = "";
+            SPUtiles.setStringValue(this, AppConstants.SP_LOGIN_PASSWORD, "");
+            mBind.llAccount.setVisibility(View.GONE);
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+    private void loginServer() {
+        mGatewayId = mBind.etGatewayId.getText().toString();
+        if (!TextUtils.isEmpty(mGatewayId)) {
+            if (mGatewayId.length() != 16) {
+                ToastUtils.showToast(this, "length must be 8 bytes!");
+                return;
+            }
+        }
+        // 登录
+        mAccount = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_ACCOUNT, "");
+        mPassword = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_PASSWORD, "");
+        int env = SPUtiles.getIntValue(this, AppConstants.SP_LOGIN_ENV, 0);
+        if (TextUtils.isEmpty(mAccount) || TextUtils.isEmpty(mPassword)) {
+            LoginDialog dialog = new LoginDialog();
+            dialog.setOnLoginClicked(this::login);
+            dialog.show(getSupportFragmentManager());
+            return;
+        }
+        login(mAccount, mPassword, env);
+    }
+
+
+    @Nullable
+    private ArrayList<OrderTask> getOrderTasks() {
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        savedParamsError = false;
+        if (mSelectedPlatform == 0) {
+            if (mSelectedMode == 0) {
+                String devEui = mBind.etDevEui.getText().toString();
+                String appEui = mBind.etAppEui.getText().toString();
+                String devAddr = mBind.etDevAddr.getText().toString();
+                String appSkey = mBind.etAppSkey.getText().toString();
+                String nwkSkey = mBind.etNwkSkey.getText().toString();
+                if (devEui.length() != 16) {
+                    return null;
+                }
+                if (appEui.length() != 16) {
+                    return null;
+                }
+                if (devAddr.length() != 8) {
+                    return null;
+                }
+                if (appSkey.length() != 32) {
+                    return null;
+                }
+                if (nwkSkey.length() != 32) {
+                    return null;
+                }
+                orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
+                orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
+                orderTasks.add(OrderTaskAssembler.setLoraDevAddr(devAddr));
+                orderTasks.add(OrderTaskAssembler.setLoraAppSKey(appSkey));
+                orderTasks.add(OrderTaskAssembler.setLoraNwkSKey(nwkSkey));
+            } else {
+                String devEui = mBind.etDevEui.getText().toString();
+                String appEui = mBind.etAppEui.getText().toString();
+                String appKey = mBind.etAppKey.getText().toString();
+                if (devEui.length() != 16) {
+                    return null;
+                }
+                if (appEui.length() != 16) {
+                    return null;
+                }
+                if (appKey.length() != 32) {
+                    return null;
+                }
+                orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
+                orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
+                orderTasks.add(OrderTaskAssembler.setLoraAppKey(appKey));
+            }
+            orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
+            orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
+            if (mSelectedMessageType == 1) {
+                orderTasks.add(OrderTaskAssembler.setMaxRetransmissionTimes(mSelectedMaxRetransmissionTimes + 1));
+            }
+            // 保存并连接
+            orderTasks.add(OrderTaskAssembler.setLoraRegion(mSelectedRegion));
+            if (mSelectedRegion == 1 || mSelectedRegion == 2 || mSelectedRegion == 8) {
+                // US915,AU915,CN470
+                orderTasks.add(OrderTaskAssembler.setLoraCH(mSelectedCh1, mSelectedCh2));
+            }
+            if (mSelectedRegion == 3 || mSelectedRegion == 4
+                    || mSelectedRegion == 5 || mSelectedRegion == 9) {
+                // CN779,EU433,EU868 and RU864
+                orderTasks.add(OrderTaskAssembler.setLoraDutyCycleEnable(mBind.cbDutyCycle.isChecked() ? 1 : 0));
+            }
+            if (mSelectedRegion == 2 || mSelectedRegion == 3 || mSelectedRegion == 4 || mSelectedRegion == 5
+                    || mSelectedRegion == 6 || mSelectedRegion == 7 || mSelectedRegion == 9) {
+                // AS923,US915,AU915
+                orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr));
+            }
+        } else {
+            orderTasks.add(OrderTaskAssembler.setLoraDevEUI(mRemoteDevEUI));
+            orderTasks.add(OrderTaskAssembler.setLoraAppEUI(mRemoteAPPEUI));
+            orderTasks.add(OrderTaskAssembler.setLoraAppKey(mRemoteAPPKEY));
+            orderTasks.add(OrderTaskAssembler.setLoraUploadMode(2));
+            orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
+            if (mSelectedMessageType == 1) {
+                orderTasks.add(OrderTaskAssembler.setMaxRetransmissionTimes(mSelectedMaxRetransmissionTimes + 1));
+            }
+            if (mSelectedServerRegion == 0)
+                mSelectedRegion = 0;
+            else if (mSelectedServerRegion == 1)
+                mSelectedRegion = 5;
+            else if (mSelectedServerRegion == 2 || mSelectedServerRegion == 3)
+                mSelectedRegion = 8;
+            else if (mSelectedServerRegion == 4 || mSelectedServerRegion == 5)
+                mSelectedRegion = 1;
+            // 保存并连接
+            orderTasks.add(OrderTaskAssembler.setLoraRegion(mSelectedRegion));
+            if (mSelectedServerRegion > 1) {
+                // US915,AU915
+                orderTasks.add(OrderTaskAssembler.setLoraCH(mSelectedCh1, mSelectedCh2));
+            }
+            if (mSelectedServerRegion == 1) {
+                // EU868
+                orderTasks.add(OrderTaskAssembler.setLoraDutyCycleEnable(mBind.cbDutyCycle.isChecked() ? 1 : 0));
+                orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr));
+            }
+        }
+        // 数据发送次数默认为1
+        orderTasks.add(OrderTaskAssembler.setLoraUplinkStrategy(mBind.cbAdr.isChecked() ? 1 : 0, mSelectedDr1, mSelectedDr2));
+        return orderTasks;
     }
 
     @Override
@@ -749,4 +958,145 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             mBind.llAdrOptions.setVisibility(isChecked ? View.GONE : View.VISIBLE);
         }
     }
+
+    private static final String DEVICE_PROFILE_TYPE = "007_PIR";
+    private static final String APPLICATION_NAME = "LW007_PIR";
+    // LW001-BG PRO(L) 10
+    // LW001-BG PRO(M) 20
+    // LW004-PB 30
+    // LW005-MP 40
+    // LW006 45
+    // LW007-PIR 50
+    // LW008-MT 60
+    private static final String PRODUCT_MODEL = "50";
+    private String mDeviceProfileSearch;
+    private String mAccount;
+    private String mPassword;
+
+    private String mGatewayId;
+
+    private void login(String account, String password, int envValue) {
+        LoginEntity entity = new LoginEntity();
+        entity.username = account;
+        entity.password = password;
+        entity.source = 1;
+        if (envValue == 0)
+            Urls.setCloudEnv(getApplicationContext());
+        else
+            Urls.setTestEnv(getApplicationContext());
+        RequestBody body = RequestBody.create(Urls.JSON, new Gson().toJson(entity));
+        OkGo.<String>post(Urls.loginApi(getApplicationContext()))
+                .upRequestBody(body)
+                .execute(new StringCallback() {
+
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        showLoadingProgressDialog();
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Type type = new TypeToken<CommonResp<JsonObject>>() {
+                        }.getType();
+                        CommonResp<JsonObject> commonResp = new Gson().fromJson(response.body(), type);
+                        if (commonResp.code != 200) {
+                            ToastUtils.showToast(LoRaConnSettingActivity.this, commonResp.msg);
+                            LoginDialog dialog = new LoginDialog();
+                            dialog.setOnLoginClicked((account1, password1, env) -> login(account1, password1, env));
+                            dialog.show(getSupportFragmentManager());
+                            return;
+                        }
+                        SPUtiles.setStringValue(LoRaConnSettingActivity.this, AppConstants.SP_LOGIN_ACCOUNT, account);
+                        SPUtiles.setStringValue(LoRaConnSettingActivity.this, AppConstants.SP_LOGIN_PASSWORD, password);
+                        SPUtiles.setIntValue(LoRaConnSettingActivity.this, AppConstants.SP_LOGIN_ENV, envValue);
+                        // add header
+                        String accessToken = commonResp.data.get("access_token").getAsString();
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.put("Authorization", accessToken);
+                        OkGo.getInstance().addCommonHeaders(headers);
+
+                        if (mSelectedServerRegion == 0) {
+                            mDeviceProfileSearch = String.format("AS923_%s", DEVICE_PROFILE_TYPE);
+                        } else if (mSelectedServerRegion == 1) {
+                            mDeviceProfileSearch = String.format("EU868_%s", DEVICE_PROFILE_TYPE);
+                        } else if (mSelectedServerRegion == 2) {
+                            mDeviceProfileSearch = String.format("US915_0_%s", DEVICE_PROFILE_TYPE);
+                        } else if (mSelectedServerRegion == 3) {
+                            mDeviceProfileSearch = String.format("US915_1_%s", DEVICE_PROFILE_TYPE);
+                        } else if (mSelectedServerRegion == 4) {
+                            mDeviceProfileSearch = String.format("AU915_0_%s", DEVICE_PROFILE_TYPE);
+                        } else if (mSelectedServerRegion == 5) {
+                            mDeviceProfileSearch = String.format("AU915_1_%s", DEVICE_PROFILE_TYPE);
+                        }
+                        syncDevices();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        ToastUtils.showToast(LoRaConnSettingActivity.this, R.string.request_error);
+                        LoginDialog dialog = new LoginDialog();
+                        dialog.setOnLoginClicked((account12, password12, env) -> login(account12, password12, env));
+                        dialog.show(getSupportFragmentManager());
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissLoadingProgressDialog();
+                    }
+                });
+    }
+
+    private void syncDevices() {
+        String devName = String.format("%s_%s", APPLICATION_NAME, mRemoteDevEUI.substring(12).toUpperCase());
+        String gwName = "";
+        if (!TextUtils.isEmpty(mGatewayId)) {
+            gwName = String.format("%s_%s", mAccount, mGatewayId.substring(12).toUpperCase());
+        }
+        OkGo.<String>post(Urls.syncGatewayApi(getApplicationContext()))
+                .params("devEui", mRemoteDevEUI)
+                .params("model", PRODUCT_MODEL)
+                .params("applicationIdFull", APPLICATION_NAME)
+                .params("devName", devName)
+                .params("devDesc", mAccount)
+                .params("gwId", mGatewayId)
+                .params("gwName", gwName)
+                .params("gwSearch", gwName)
+                .params("gwDesc", mAccount)
+                .params("joinEui", mRemoteAPPEUI)
+                .params("nwkKey", mRemoteAPPKEY)
+                .params("devProfilesSearch", mDeviceProfileSearch)
+
+                .execute(new StringCallback() {
+
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        showLoadingProgressDialog();
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        JsonObject object = new Gson().fromJson(response.body(), JsonObject.class);
+                        int code = object.get("code").getAsInt();
+                        String msg = object.get("msg").getAsString();
+                        if (code != 200) {
+                            ToastUtils.showToast(LoRaConnSettingActivity.this, msg);
+                            return;
+                        }
+//                        ToastUtils.showToast(LoRaConnSettingActivity.this, "Sync Success");
+                        showSyncingProgressDialog();
+                        LoRaLW007MokoSupport.getInstance().sendOrder(mOrderTasks.toArray(new OrderTask[]{}));
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        ToastUtils.showToast(LoRaConnSettingActivity.this, R.string.request_error);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissLoadingProgressDialog();
+                    }
+                });
+    }
+
 }
