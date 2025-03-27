@@ -14,6 +14,6 @@ public class ExportDataListAdapter extends BaseQuickAdapter<ExportData, BaseView
     @Override
     protected void convert(BaseViewHolder helper, ExportData item) {
         helper.setText(R.id.tv_time, item.name);
-        helper.setImageResource(R.id.iv_checked, item.isSelected ? R.drawable.lw007_ic_selected : R.drawable.lw007_ic_unselected);
+        helper.setImageResource(R.id.iv_checked, item.isSelected ? R.drawable.ic_selected : R.drawable.ic_unselected);
     }
 }

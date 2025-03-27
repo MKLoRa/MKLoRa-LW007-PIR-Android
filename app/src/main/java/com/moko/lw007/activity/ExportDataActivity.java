@@ -16,7 +16,7 @@ import com.moko.lw007.AppConstants;
 import com.moko.lw007.R;
 import com.moko.lw007.adapter.ExportDataListAdapter;
 import com.moko.lw007.databinding.Lw007ActivityExportDataBinding;
-import com.moko.lw007.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
 import com.moko.lw007.entity.ExportData;
 import com.moko.lw007.utils.Utils;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
@@ -138,7 +138,7 @@ public class ExportDataActivity extends BaseActivity implements BaseQuickAdapter
         if (animation == null) {
             mBind.tvSyncSwitch.setText("Stop");
             isSync = true;
-            animation = AnimationUtils.loadAnimation(this, R.anim.lw007_rotate_refresh);
+            animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
             mBind.ivSync.startAnimation(animation);
             LoRaLW007MokoSupport.getInstance().enableLogNotify();
             Calendar calendar = Calendar.getInstance();

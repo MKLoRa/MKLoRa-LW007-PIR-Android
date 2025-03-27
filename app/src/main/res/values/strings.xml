@@ -1,18 +1,7 @@
 <resources>
     <string name="app_name">LW007-PIR</string>
 
-    <string name="cancel">Cancel</string>
-    <string name="ensure">OK</string>
-    <string name="confirm">Confirm</string>
-
-
-    <string name="please_enter_password">Please enter password</string>
-    <string name="password_null">Password cannot be empty!</string>
-    <string name="main_password_length">The password should be 8 characters</string>
-    <string name="change_password_length">The password should be 8 characters.Please try again</string>
-    <string name="change_password_match">Password do not match!Please try again.</string>
     <string name="main_exit_tips">Are you sure you want to quit?</string>
-    <string name="setting_syncing">syncing</string>
 
     <string name="company_name">MOKO TECHNOLOGY LTD.</string>
     <string name="about_title">ABOUT</string>
@@ -27,6 +16,7 @@
     <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow LW007 use the Location permission</string>
     <string name="permission_location_need_content">LW007 requires access to Location permission. If the permissions are not on, LW007 cannot be used normally.</string>
     <string name="permission_ble_content">LW007 requires access to bluetooth scan contract and location permission. If the permissions are not on, LW007 cannot be used normally.</string>
+
     <string name="title_lora">LoRa</string>
     <string name="title_general">GENERAL</string>
     <string name="title_ble">BLUETOOTH</string>

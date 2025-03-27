@@ -93,14 +93,14 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
 
     public void setBleConnectable(int connectable) {
         isConnectable = connectable == 1;
-        mBind.ivConnectable.setImageResource(isConnectable ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.ivConnectable.setImageResource(isConnectable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     private boolean isLoginMode;
 
     public void setBleLoginMode(int loginMode) {
         isLoginMode = loginMode == 1;
-        mBind.ivLoginMode.setImageResource(isLoginMode ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.ivLoginMode.setImageResource(isLoginMode ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.tvChangePassword.setVisibility(isLoginMode ? View.VISIBLE : View.GONE);
     }
 
@@ -113,12 +113,12 @@ public class BleFragment extends Fragment implements SeekBar.OnSeekBarChangeList
 
     public void changeConnectable() {
         isConnectable = !isConnectable;
-        mBind.ivConnectable.setImageResource(isConnectable ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.ivConnectable.setImageResource(isConnectable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     public void changeLoginMode() {
         isLoginMode = !isLoginMode;
-        mBind.ivLoginMode.setImageResource(isLoginMode ? R.drawable.lw007_ic_checked : R.drawable.lw007_ic_unchecked);
+        mBind.ivLoginMode.setImageResource(isLoginMode ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.tvChangePassword.setVisibility(isLoginMode ? View.VISIBLE : View.GONE);
     }
 

@@ -11,7 +11,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw007.databinding.Lw007ActivitySelftestBinding;
-import com.moko.lw007.dialog.LoadingMessageDialog;
+import com.moko.lib.loraui.dialog.LoadingMessageDialog;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
 import com.moko.support.lw007.entity.ControlKeyEnum;

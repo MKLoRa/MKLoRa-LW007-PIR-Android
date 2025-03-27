@@ -27,11 +27,11 @@ import com.moko.lw007.BuildConfig;
 import com.moko.lw007.R;
 import com.moko.lw007.adapter.DeviceListAdapter;
 import com.moko.lw007.databinding.Lw007ActivityMainBinding;
-import com.moko.lw007.dialog.AlertMessageDialog;
-import com.moko.lw007.dialog.LoadingDialog;
-import com.moko.lw007.dialog.LoadingMessageDialog;
-import com.moko.lw007.dialog.PasswordDialog;
-import com.moko.lw007.dialog.ScanFilterDialog;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.LoadingDialog;
+import com.moko.lib.loraui.dialog.LoadingMessageDialog;
+import com.moko.lib.loraui.dialog.PasswordDialog;
+import com.moko.lib.loraui.dialog.ScanFilterDialog;
 import com.moko.lw007.entity.AdvInfo;
 import com.moko.lw007.utils.BeaconInfoParseableImpl;
 import com.moko.lw007.utils.SPUtiles;
@@ -103,7 +103,7 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
         adapter.openLoadAnimation();
         mBind.rvDevices.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        itemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.lw007_shape_recycleview_divider));
+        itemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.shape_recycleview_divider));
         mBind.rvDevices.addItemDecoration(itemDecoration);
         mBind.rvDevices.setAdapter(adapter);
         mHandler = new Handler(Looper.getMainLooper());
@@ -127,7 +127,7 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
             LoRaLW007MokoSupport.getInstance().enableBluetooth();
             return;
         }
-        animation = AnimationUtils.loadAnimation(this, R.anim.lw007_rotate_refresh);
+        animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh);
         mBind.ivRefresh.startAnimation(animation);
         beaconInfoParseable = new BeaconInfoParseableImpl();
         mokoBleScanner.startScanDevice(this);
