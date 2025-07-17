@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.moko.ble.lib.task.OrderTask;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw007.R;
 import com.moko.lw007.activity.DeviceInfoActivity;
 import com.moko.lw007.databinding.Lw007FragmentDeviceBinding;
-import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
 

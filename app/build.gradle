@@ -6,13 +6,13 @@ if (!isLibrary.toBoolean()) {
 
 android {
     namespace "com.moko.lw007"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
-        minSdk 26
-        targetSdk 34
-        versionCode 8
-        versionName "1.0.7"
+        minSdk 28
+        targetSdk 35
+        versionCode 108
+        versionName "1.0.8"
 
         def formatDate = new Date().format("yyyyMMddHHmm")
         setProperty("archivesBaseName", "LW007_${versionName}_${formatDate}")
@@ -89,10 +89,10 @@ dependencies {
     implementation 'com.github.Carbs0126:NumberPickerView:master-SNAPSHOT'
     if (!isLibrary.toBoolean()) {
         implementation project(path: ':mokosupport')
-        implementation 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.7'
+        implementation 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.9'
         implementation 'com.github.MOKO-Android-Base-Library:MKLoRaUILib:1.0.10'
     } else {
-        compileOnly 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.7'
+        compileOnly 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.9'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKLoRaUILib:1.0.10'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKBleLib:1.0.1'
         implementation files('libs/mokoSupport.jar')
