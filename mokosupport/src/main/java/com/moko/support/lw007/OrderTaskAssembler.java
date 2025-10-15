@@ -19,6 +19,7 @@ import androidx.annotation.IntRange;
 public class OrderTaskAssembler {
     ///////////////////////////////////////////////////////////////////////////
     // READ
+
     ///////////////////////////////////////////////////////////////////////////
 
     public static OrderTask getManufacturer() {
@@ -146,6 +147,18 @@ public class OrderTaskAssembler {
     public static OrderTask getLoraNetworkCheckInterval() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_LORA_NETWORK_CHECK_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask getLoraSingleChannelFunction() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LORA_SINGLE_CHANNEL_FUNCTION);
+        return task;
+    }
+
+    public static OrderTask getLoraSingleChannelSelection() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LORA_SINGLE_CHANNEL_SELECTION);
         return task;
     }
 
@@ -329,11 +342,11 @@ public class OrderTaskAssembler {
         return task;
     }
 
-//    public static OrderTask getBattery() {
-//        ControlReadTask task = new ControlReadTask();
-//        task.setData(ControlKeyEnum.KEY_BATTERY);
-//        return task;
-//    }
+    public static OrderTask getBattery() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_BATTERY);
+        return task;
+    }
 
     public static OrderTask getMacAddress() {
         ControlReadTask task = new ControlReadTask();
@@ -371,15 +384,46 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getCondition1VoltageThreshold() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_CONDITION_1_VOLTAGE_THRESHOLD);
+        return task;
+    }
+
+    public static OrderTask getCondition1MinSampleInterval() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_CONDITION_1_MIN_SAMPLE_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask getCondition1SampleTimes() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_CONDITION_1_SAMPLE_TIMES);
+        return task;
+    }
+
     public static OrderTask getBatteryInfo() {
         ControlReadTask task = new ControlReadTask();
         task.setData(ControlKeyEnum.KEY_BATTERY_INFO);
         return task;
     }
 
+    public static OrderTask getBatteryInfoLast() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_BATTERY_INFO_LAST);
+        return task;
+    }
+
+    public static OrderTask getBatteryInfoAll() {
+        ControlReadTask task = new ControlReadTask();
+        task.setData(ControlKeyEnum.KEY_BATTERY_INFO_ALL);
+        return task;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // WIRTE
+
     ///////////////////////////////////////////////////////////////////////////
     public static OrderTask setPassword(String password) {
         SetPasswordTask task = new SetPasswordTask();
@@ -499,6 +543,18 @@ public class OrderTaskAssembler {
     public static OrderTask setLoraDutyCycleEnable(@IntRange(from = 0, to = 1) int enable) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setLoraDutyCycleEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setLoraSingleChannelFunction(@IntRange(from = 0, to = 1) int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLoraSingleChannelFunction(enable);
+        return task;
+    }
+
+    public static OrderTask setLoraSingleChannelSelection(@IntRange(from = 0, to = 2) int selection) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLoraSingleChannelSelection(selection);
         return task;
     }
 
@@ -691,6 +747,24 @@ public class OrderTaskAssembler {
     public static OrderTask setTimezone(@IntRange(from = -24, to = 28) int timezone) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setTimezone(timezone);
+        return task;
+    }
+
+    public static OrderTask setCondition1VoltageThreshold(@IntRange(from = 44, to = 64) int threshold) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setCondition1VoltageThreshold(threshold);
+        return task;
+    }
+
+    public static OrderTask setCondition1MinSampleInterval(@IntRange(from = 1, to = 1440) int interval) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setCondition1MinSampleInterval(interval);
+        return task;
+    }
+
+    public static OrderTask setCondition1SampleTimes(@IntRange(from = 1, to = 100) int times) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setCondition1SampleTimes(times);
         return task;
     }
 }

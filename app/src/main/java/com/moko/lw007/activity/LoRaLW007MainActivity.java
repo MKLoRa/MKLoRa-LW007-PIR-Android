@@ -72,6 +72,7 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
     public Handler mHandler;
     private boolean isPasswordError;
     private boolean isNeedPassword;
+    private int mDeviceType;
 
     public static String PATH_LOGCAT;
 
@@ -340,6 +341,7 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
                 mokoBleScanner.stopScanDevice();
             }
             isNeedPassword = advInfo.needPassword;
+            mDeviceType = advInfo.deviceType;
             if (!isNeedPassword) {
                 showLoadingProgressDialog();
                 mBind.ivRefresh.postDelayed(() -> LoRaLW007MokoSupport.getInstance().connDevice(advInfo.mac), 500);
@@ -472,6 +474,7 @@ public class LoRaLW007MainActivity extends BaseActivity implements MokoScanDevic
                                 SPUtiles.setStringValue(LoRaLW007MainActivity.this, AppConstants.SP_KEY_SAVED_PASSWORD_LW007, mSavedPassword);
                                 XLog.i("Success");
                                 Intent i = new Intent(LoRaLW007MainActivity.this, DeviceInfoActivity.class);
+                                i.putExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, mDeviceType);
                                 startActivityForResult(i, AppConstants.REQUEST_CODE_DEVICE_INFO);
                             }
                             if (0 == result) {

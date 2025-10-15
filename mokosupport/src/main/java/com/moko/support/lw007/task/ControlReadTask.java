@@ -17,19 +17,7 @@ public class ControlReadTask extends OrderTask {
     }
 
     public void setData(ControlKeyEnum key) {
-        switch (key) {
-            case KEY_NETWORK_STATUS:
-//            case KEY_BATTERY:
-            case KEY_MAC:
-            case KEY_PIR:
-            case KEY_HALL_STATUS_SUM:
-            case KEY_TH_DATA:
-            case KEY_PCBA_STATUS:
-            case KEY_SELFTEST_STATUS:
-            case KEY_BATTERY_INFO:
-                createGetConfigData(key.getParamsKey());
-                break;
-        }
+        createGetConfigData(key.getParamsKey());
     }
 
     private void createGetConfigData(int configKey) {

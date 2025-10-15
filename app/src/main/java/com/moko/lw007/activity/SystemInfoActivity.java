@@ -55,6 +55,7 @@ public class SystemInfoActivity extends BaseActivity {
     private Lw007ActivitySystemInfoBinding mBind;
     private boolean mReceiverTag = false;
     private String mDeviceMac;
+    private int mDeviceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,9 @@ public class SystemInfoActivity extends BaseActivity {
         mBind = Lw007ActivitySystemInfoBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
+        mDeviceType = getIntent().getIntExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, 0);
+        mBind.tvBatteryInfo.setVisibility(mDeviceType == 1 ? View.VISIBLE : View.GONE);
+        mBind.rlBattery.setVisibility(mDeviceType == 1 ? View.VISIBLE : View.GONE);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -72,7 +76,8 @@ public class SystemInfoActivity extends BaseActivity {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getMacAddress());
             orderTasks.add(OrderTaskAssembler.getDeviceModel());
-//        orderTasks.add(OrderTaskAssembler.getBattery());
+            if (mDeviceType == 1)
+                orderTasks.add(OrderTaskAssembler.getBattery());
             orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
             orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
             orderTasks.add(OrderTaskAssembler.getHardwareVersion());
@@ -163,12 +168,12 @@ public class SystemInfoActivity extends BaseActivity {
                                             mBind.tvMacAddress.setText(mDeviceMac);
                                         }
                                         break;
-//                                    case KEY_BATTERY:
-//                                        if (length > 0) {
-//                                            int battery = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 4 + length));
-//                                            tvBattery.setText(String.format("%sV", MokoUtils.getDecimalFormat("0.###").format(battery * 0.001f)));
-//                                        }
-//                                        break;
+                                    case KEY_BATTERY:
+                                        if (length > 0) {
+                                            int battery = MokoUtils.toInt(Arrays.copyOfRange(value, 4, 4 + length));
+                                            mBind.tvBattery.setText(String.format("%smV", battery));
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -210,6 +215,14 @@ public class SystemInfoActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
+
+    public void onBatteryInfo(View view) {
+        if (isWindowLocked())
+            return;
+        Intent intent = new Intent(this, BatteryConsumeActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+        startActivity(intent);
+    }
 
     public void onDebuggerMode(View view) {
         if (isWindowLocked())
@@ -408,7 +421,10 @@ public class SystemInfoActivity extends BaseActivity {
 
     public void onTest(View view) {
         if (isTriggerValid()) {
-            startActivity(new Intent(this, SelfTestActivity.class));
+            if (mDeviceType == 1)
+                startActivity(new Intent(this, SelfTestNewActivity.class));
+            else
+                startActivity(new Intent(this, SelfTestActivity.class));
         }
     }
 }

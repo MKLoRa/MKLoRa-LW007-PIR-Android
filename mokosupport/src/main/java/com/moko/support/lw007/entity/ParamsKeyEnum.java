@@ -23,6 +23,8 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_LORA_DUTYCYCLE(0x0E),
     KEY_LORA_TIME_SYNC_INTERVAL(0x0F),
     KEY_LORA_NETWORK_CHECK_INTERVAL(0x10),
+    KEY_LORA_SINGLE_CHANNEL_FUNCTION(0x11),
+    KEY_LORA_SINGLE_CHANNEL_SELECTION(0x12),
 
     // ble
     KEY_BLE_ENABLE(0x20),
@@ -61,6 +63,13 @@ public enum ParamsKeyEnum implements Serializable {
 //    KEY_LOW_POWER_PROMPT(0x47),
     KEY_LOW_POWER_PAYLOAD(0x48),
     KEY_LED_INDICATOR_STATUS(0x49),
+    // 条件1低电电压值
+    KEY_CONDITION_1_VOLTAGE_THRESHOLD(0x4B),
+    // 条件1最小采样间隔
+    KEY_CONDITION_1_MIN_SAMPLE_INTERVAL(0x4C),
+    // 条件1连续采样次数
+    KEY_CONDITION_1_SAMPLE_TIMES(0x4D),
+
     ;
 
     private int paramsKey;

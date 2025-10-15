@@ -181,6 +181,25 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
+    public void setLoraSingleChannelFunction(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_LORA_SINGLE_CHANNEL_FUNCTION.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+    public void setLoraSingleChannelSelection(@IntRange(from = 0, to = 2) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_LORA_SINGLE_CHANNEL_SELECTION.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
     public void setLoraTimeSyncInterval(@IntRange(from = 0, to = 255) int interval) {
         data = new byte[]{
                 (byte) 0xED,
@@ -514,6 +533,38 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0x02,
                 (byte) powerIndicator,
                 (byte) networkIndicator
+        };
+    }
+
+    public void setCondition1VoltageThreshold(@IntRange(from = 44, to = 64) int threshold) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_CONDITION_1_VOLTAGE_THRESHOLD.getParamsKey(),
+                (byte) 0x01,
+                (byte) threshold
+        };
+    }
+
+    public void setCondition1MinSampleInterval(@IntRange(from = 1, to = 1440) int interval) {
+        byte[] rawDataBytes = MokoUtils.toByteArray(interval, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_CONDITION_1_MIN_SAMPLE_INTERVAL.getParamsKey(),
+                (byte) 0x02,
+                (byte) rawDataBytes[0],
+                (byte) rawDataBytes[1]
+        };
+    }
+
+    public void setCondition1SampleTimes(@IntRange(from = 1, to = 100) int times) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_CONDITION_1_SAMPLE_TIMES.getParamsKey(),
+                (byte) 0x01,
+                (byte) times
         };
     }
 }

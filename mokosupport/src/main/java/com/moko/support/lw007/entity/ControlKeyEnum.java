@@ -11,7 +11,7 @@ public enum ControlKeyEnum implements Serializable {
     KEY_POWER_OFF(0x52),
     KEY_TIME(0x53),
     KEY_NETWORK_STATUS(0x54),
-//    KEY_BATTERY(0x56),
+    KEY_BATTERY(0x56),
     KEY_MAC(0x57),
     KEY_PIR(0x58),
     KEY_HALL_STATUS_SUM(0x59),
@@ -20,6 +20,8 @@ public enum ControlKeyEnum implements Serializable {
     KEY_SELFTEST_STATUS(0x5D),
     KEY_BATTERY_INFO(0x5E),
     KEY_BATTERY_RESET(0x5F),
+    KEY_BATTERY_INFO_LAST(0x60),
+    KEY_BATTERY_INFO_ALL(0x61),
     ;
 
     private int paramsKey;

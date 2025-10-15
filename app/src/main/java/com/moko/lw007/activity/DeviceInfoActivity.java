@@ -64,12 +64,14 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private boolean noPassword;
 
     private boolean savedParamsError;
+    private int mDeviceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBind = Lw007ActivityDeviceInfoBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
+        mDeviceType = getIntent().getIntExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, 0);
         fragmentManager = getFragmentManager();
         initFragment();
         mBind.radioBtnLora.setChecked(true);
@@ -690,6 +692,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         if (isWindowLocked())
             return;
         Intent intent = new Intent(this, LoRaConnSettingActivity.class);
+        if (mDeviceType == 1)
+            intent = new Intent(this, LoRaConnSettingNewActivity.class);
         startActivityForResult(intent, AppConstants.REQUEST_CODE_LORA_CONN_SETTING);
     }
 
@@ -772,7 +776,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onDeviceInfo(View view) {
         if (isWindowLocked())
             return;
-        startActivityForResult(new Intent(this, SystemInfoActivity.class), AppConstants.REQUEST_CODE_SYSTEM_INFO);
+        Intent intent = new Intent(this, SystemInfoActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_TYPE, mDeviceType);
+        startActivityForResult(intent, AppConstants.REQUEST_CODE_SYSTEM_INFO);
     }
 
     public void onFactoryReset(View view) {
