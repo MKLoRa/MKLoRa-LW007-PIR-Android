@@ -389,8 +389,11 @@ public class SystemInfoActivity extends BaseActivity {
                 final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
                         .setKeepBond(false)
                         .setForeground(false)
-                        .disableMtuRequest()
                         .setDisableNotification(true);
+                if (mDeviceType == 0)
+                    starter.disableMtuRequest();
+                else
+                    starter.setCurrentMtu(247);
                 starter.setZip(null, firmwareFilePath);
                 starter.start(this, DfuService.class);
                 showDFUProgressDialog("Waiting...");
