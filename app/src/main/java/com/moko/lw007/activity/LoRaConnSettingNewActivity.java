@@ -1105,20 +1105,21 @@ public class LoRaConnSettingNewActivity extends BaseActivity implements Compound
         if (!TextUtils.isEmpty(mGatewayId)) {
             gwName = String.format("%s_%s", mAccount, mGatewayId.substring(12).toUpperCase());
         }
+        JsonObject object = new JsonObject();
+        object.addProperty("devEui", mRemoteDevEUI);
+        object.addProperty("model", PRODUCT_MODEL);
+        object.addProperty("applicationIdFull", APPLICATION_NAME);
+        object.addProperty("devName", devName);
+        object.addProperty("devDesc", mAccount);
+        object.addProperty("gwId", mGatewayId);
+        object.addProperty("gwName", gwName);
+        object.addProperty("gwSearch", gwName);
+        object.addProperty("gwDesc", mAccount);
+        object.addProperty("joinEui", mRemoteAPPEUI);
+        object.addProperty("nwkKey", mRemoteAPPKEY);
+        object.addProperty("devProfilesSearch", mDeviceProfileSearch);
         OkGo.<String>post(Urls.syncGatewayApi(getApplicationContext()))
-                .params("devEui", mRemoteDevEUI)
-                .params("model", PRODUCT_MODEL)
-                .params("applicationIdFull", APPLICATION_NAME)
-                .params("devName", devName)
-                .params("devDesc", mAccount)
-                .params("gwId", mGatewayId)
-                .params("gwName", gwName)
-                .params("gwSearch", gwName)
-                .params("gwDesc", mAccount)
-                .params("joinEui", mRemoteAPPEUI)
-                .params("nwkKey", mRemoteAPPKEY)
-                .params("devProfilesSearch", mDeviceProfileSearch)
-
+                .upJson(object.toString())
                 .execute(new StringCallback() {
 
                     @Override
