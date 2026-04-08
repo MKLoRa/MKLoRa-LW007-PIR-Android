@@ -180,14 +180,10 @@ public class THSettingsActivity extends BaseActivity {
                                     case KEY_HUMIDITY_CHANGE_ALARM_ENABLE:
                                     case KEY_HUMIDITY_CHANGE_ALARM_DURATION:
                                     case KEY_HUMIDITY_CHANGE_ALARM_VALUE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         break;
                                     case KEY_TH_ENABLE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(THSettingsActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

@@ -264,18 +264,14 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                     case KEY_BLE_ADV_INTERVAL:
                                     case KEY_BLE_TX_POWER:
                                     case KEY_BLE_CONNECTABLE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         break;
                                     case KEY_BLE_LOGIN_MODE:
                                     case KEY_HEARTBEAT:
                                     case KEY_TIME_ZONE:
 //                                    case KEY_LOW_POWER_PROMPT:
                                     case KEY_LOW_POWER_PAYLOAD:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(DeviceInfoActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

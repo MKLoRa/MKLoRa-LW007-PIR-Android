@@ -156,9 +156,7 @@ public class HallSettingsActivity extends BaseActivity {
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_HALL_STATUS_ENABLE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(HallSettingsActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

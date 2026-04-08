@@ -107,9 +107,7 @@ public class SelfTestNewActivity extends BaseActivity {
                                             savedParamsError = true;
                                         break;
                                     case KEY_CONDITION_1_SAMPLE_TIMES:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError)
                                             ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
                                         else
