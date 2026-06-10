@@ -34,6 +34,7 @@ public class AppConstants {
     public static final String EXTRA_KEY_DEVICE_MAC = "EXTRA_KEY_DEVICE_MAC";
     public static final String EXTRA_KEY_FROM_ACTIVITY = "EXTRA_KEY_FROM_ACTIVITY";
     public static final String EXTRA_KEY_DEVICE_TYPE = "EXTRA_KEY_DEVICE_TYPE";
+    public static final String EXTRA_KEY_FIRMWARE_VERSION = "EXTRA_KEY_FIRMWARE_VERSION";
     // request_code
     public static final int REQUEST_CODE_DEVICE_INFO = 101;
     public static final int REQUEST_CODE_SET_UUID = 102;

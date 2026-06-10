@@ -334,6 +334,26 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
+    public void setPIRReportWhenMotionOccupancy(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_PIR_REPORT_WHEN_MOTION_OCCUPANCY.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
+    public void setPIRReportWhenNoMotionOccupancy(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_PIR_REPORT_WHEN_NO_MOTION_OCCUPANCY.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
     public void setHallStatusEnable(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,

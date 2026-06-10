@@ -66,6 +66,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private boolean savedParamsError;
     private int mDeviceType;
 
+    private String mFirmwareVersion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +115,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 orderTasks.add(OrderTaskAssembler.getLoraRegion());
                 orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
                 orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
+                orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
                 LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
             }, 500);
         }
@@ -197,6 +200,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
+                    case CHAR_FIRMWARE_REVISION:
+                        mFirmwareVersion = new String(value);
+                        break;
                     case CHAR_CONTROL:
                         if (value.length >= 4) {
                             int header = value[0] & 0xFF;// 0xED
@@ -705,6 +711,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         if (isWindowLocked())
             return;
         Intent intent = new Intent(this, PIRSettingsActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_FIRMWARE_VERSION, mFirmwareVersion);
         startActivity(intent);
     }
 

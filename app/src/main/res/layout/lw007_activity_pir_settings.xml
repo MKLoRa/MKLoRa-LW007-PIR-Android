@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_f2f2f2"
@@ -130,6 +131,84 @@
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_pir_report_interval" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMotionOccupancy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white_ffffff"
+        android:padding="10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <CheckBox
+            android:id="@+id/cb_pir_report_motion_occupancy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_cb_btn"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Report When Motion Occupancy"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_pir_report_motion_occupancy_hint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="*When the space transitions from an unoccupied state to an occupied state, shall an Information Payload be reported?"
+            android:textColor="@color/black_333333"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cb_pir_report_motion_occupancy" />
+
+        <View
+            android:id="@+id/divider_motion_occupancy"
+            style="@style/divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_pir_report_motion_occupancy_hint" />
+
+        <CheckBox
+            android:id="@+id/cb_pir_report_no_motion_occupancy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_cb_btn"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Report When No Motion Occupancy"
+            android:textColor="@color/black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_motion_occupancy" />
+
+        <TextView
+            android:id="@+id/tv_pir_report_no_motion_occupancy_hint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="*When the space transitions from an occupied state to an unoccupied state, shall an Information Payload be reported?"
+            android:textColor="@color/black_333333"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cb_pir_report_no_motion_occupancy" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

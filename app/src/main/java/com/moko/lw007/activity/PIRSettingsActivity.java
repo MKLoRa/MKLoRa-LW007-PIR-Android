@@ -11,8 +11,10 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lw007.AppConstants;
 import com.moko.lw007.databinding.Lw007ActivityPirSettingsBinding;
 import com.moko.lw007.utils.ToastUtils;
+import com.moko.lw007.utils.Utils;
 import com.moko.support.lw007.LoRaLW007MokoSupport;
 import com.moko.support.lw007.OrderTaskAssembler;
 import com.moko.support.lw007.entity.ControlKeyEnum;
@@ -30,6 +32,8 @@ public class PIRSettingsActivity extends BaseActivity {
 
     private Lw007ActivityPirSettingsBinding mBind;
     private boolean savedParamsError;
+    private String mFirmwareVersion;
+    private boolean mIsShowMotionOccupancy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +41,24 @@ public class PIRSettingsActivity extends BaseActivity {
         mBind = Lw007ActivityPirSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
+        mFirmwareVersion = getIntent().getStringExtra(AppConstants.EXTRA_KEY_FIRMWARE_VERSION);
         mBind.npvPirSensitivity.setMaxValue(2);
         mBind.npvPirSensitivity.setMinValue(0);
         mBind.npvPirDelay.setMaxValue(2);
         mBind.npvPirDelay.setMinValue(0);
         LoRaLW007MokoSupport.getInstance().enablePIRNotify();
+        mIsShowMotionOccupancy = Utils.isGreaterThan(mFirmwareVersion, "1.3.0");
+        mBind.clMotionOccupancy.setVisibility(mIsShowMotionOccupancy ? View.VISIBLE : View.GONE);
         showSyncingProgressDialog();
         mBind.tvPirStatus.postDelayed(() -> {
             List<OrderTask> orderTasks = new ArrayList<>();
             orderTasks.add(OrderTaskAssembler.getPIR());
             orderTasks.add(OrderTaskAssembler.getPIREnable());
             orderTasks.add(OrderTaskAssembler.getPIRReportInterval());
+            if (mIsShowMotionOccupancy) {
+                orderTasks.add(OrderTaskAssembler.getPIRReportWhenMotionOccupancy());
+                orderTasks.add(OrderTaskAssembler.getPIRReportWhenNoMotionOccupancy());
+            }
             orderTasks.add(OrderTaskAssembler.getPIRSensitivity());
             orderTasks.add(OrderTaskAssembler.getPIRDelayTime());
             LoRaLW007MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -148,6 +159,8 @@ public class PIRSettingsActivity extends BaseActivity {
                                     case KEY_PIR_REPORT_INTERVAL:
                                     case KEY_PIR_SENSITIVITY:
                                     case KEY_PIR_DELAY_TIME:
+                                    case KEY_PIR_REPORT_WHEN_MOTION_OCCUPANCY:
+                                    case KEY_PIR_REPORT_WHEN_NO_MOTION_OCCUPANCY:
                                         savedParamsError |= result != 1;
                                         break;
                                     case KEY_PIR_ENABLE:
@@ -179,6 +192,18 @@ public class PIRSettingsActivity extends BaseActivity {
                                         if (length > 0) {
                                             int interval = value[4] & 0xFF;
                                             mBind.etPirReportInterval.setText(String.valueOf(interval));
+                                        }
+                                        break;
+                                    case KEY_PIR_REPORT_WHEN_MOTION_OCCUPANCY:
+                                        if (length > 0) {
+                                            int enable = value[4] & 0xFF;
+                                            mBind.cbPirReportMotionOccupancy.setChecked(enable == 1);
+                                        }
+                                        break;
+                                    case KEY_PIR_REPORT_WHEN_NO_MOTION_OCCUPANCY:
+                                        if (length > 0) {
+                                            int enable = value[4] & 0xFF;
+                                            mBind.cbPirReportNoMotionOccupancy.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_PIR_SENSITIVITY:
@@ -254,6 +279,12 @@ public class PIRSettingsActivity extends BaseActivity {
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setPIRReportInterval(interval));
+        if (mIsShowMotionOccupancy) {
+            orderTasks.add(OrderTaskAssembler.setPIRReportWhenMotionOccupancy(
+                    mBind.cbPirReportMotionOccupancy.isChecked() ? 1 : 0));
+            orderTasks.add(OrderTaskAssembler.setPIRReportWhenNoMotionOccupancy(
+                    mBind.cbPirReportNoMotionOccupancy.isChecked() ? 1 : 0));
+        }
         orderTasks.add(OrderTaskAssembler.setPIRSensitivity(sensitivity));
         orderTasks.add(OrderTaskAssembler.setPIRDelayTime(delay));
         orderTasks.add(OrderTaskAssembler.setPIREnable(mBind.cbPirEnable.isChecked() ? 1 : 0));

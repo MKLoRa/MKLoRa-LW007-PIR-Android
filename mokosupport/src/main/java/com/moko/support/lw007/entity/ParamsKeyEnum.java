@@ -69,6 +69,10 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_CONDITION_1_MIN_SAMPLE_INTERVAL(0x4C),
     // 条件1连续采样次数
     KEY_CONDITION_1_SAMPLE_TIMES(0x4D),
+    // 空间由空闲变为占用时是否上报
+    KEY_PIR_REPORT_WHEN_MOTION_OCCUPANCY(0x4E),
+    // 空间由占用变为空闲时是否上报
+    KEY_PIR_REPORT_WHEN_NO_MOTION_OCCUPANCY(0x4F),
 
     ;
 

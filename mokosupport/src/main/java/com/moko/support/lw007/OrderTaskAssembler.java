@@ -228,6 +228,18 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getPIRReportWhenMotionOccupancy() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_PIR_REPORT_WHEN_MOTION_OCCUPANCY);
+        return task;
+    }
+
+    public static OrderTask getPIRReportWhenNoMotionOccupancy() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_PIR_REPORT_WHEN_NO_MOTION_OCCUPANCY);
+        return task;
+    }
+
     public static OrderTask getHallStatusEnable() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_HALL_STATUS_ENABLE);
@@ -633,6 +645,18 @@ public class OrderTaskAssembler {
     public static OrderTask setPIRDelayTime(int delayTime) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setPIRDelayTime(delayTime);
+        return task;
+    }
+
+    public static OrderTask setPIRReportWhenMotionOccupancy(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setPIRReportWhenMotionOccupancy(enable);
+        return task;
+    }
+
+    public static OrderTask setPIRReportWhenNoMotionOccupancy(int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setPIRReportWhenNoMotionOccupancy(enable);
         return task;
     }
 
